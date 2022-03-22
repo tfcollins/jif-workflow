@@ -1,0 +1,4 @@
+pytest
+tqdm
+pylibiio
+pyadi-iio

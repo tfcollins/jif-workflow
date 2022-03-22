@@ -1,0 +1,6 @@
+[submodule "pyadi-dt"]
+	path = pyadi-dt
+	url = https://github.com/analogdevicesinc/pyadi-dt.git
+[submodule "pyadi-jif"]
+	path = pyadi-jif
+	url = https://github.com/analogdevicesinc/pyadi-jif.git
