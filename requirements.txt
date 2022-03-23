@@ -2,3 +2,4 @@ pytest
 tqdm
 pylibiio
 pyadi-iio
+black

@@ -4,3 +4,6 @@
 [submodule "pyadi-jif"]
 	path = pyadi-jif
 	url = https://github.com/analogdevicesinc/pyadi-jif.git
+[submodule "nebula"]
+	path = nebula
+	url = https://github.com/sdgtt/nebula.git
