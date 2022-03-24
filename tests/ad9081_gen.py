@@ -19,6 +19,56 @@ def gen_dict(cfg):
     )
 
 
+def _ad9081_tx_config(tx, cfg_tx, rx_gsps):
+    done = False
+    for tx_c in cfg_tx["decimations"]:
+        for tx_mult in [4, 3, 2, 1]:
+            tx_gsps = rx_gsps * tx_mult * 1e9
+            # Determine a DAC rate in range
+            if tx_gsps < tx.converter_clock_min or tx_gsps > tx.converter_clock_max:
+                continue
+            tx.interpolation = tx_c["coarse"] * tx_c["fine"]
+            tx.sample_clock = tx_gsps / tx.interpolation
+            try:
+                tx._check_clock_relations()
+            except:
+                # print("Failed to find a valid clock configuration")
+                continue
+            sample_clock = tx_gsps / tx.interpolation
+            return tx_c, sample_clock
+
+    return None, None
+
+
+def _system_check(rx, tx, c, tx_c, vcxo, rx_sample_clock, tx_sample_clock):
+    full_config = {
+        "rx": {
+            "sample_clock": rx_sample_clock,
+            "coarse": c["coarse"],
+            "fine": c["fine"],
+        },
+        "tx": {
+            "sample_clock": tx_sample_clock,
+            "coarse": tx_c["coarse"],
+            "fine": tx_c["fine"],
+        },
+    }
+
+    try:
+        d = gen_dict(full_config)
+        cfg, sys = create_jif_configuration(d, vcxo)
+    except Exception as e:
+        return False
+
+    rx_gsps = rx_sample_clock * rx.decimation
+    tx_gsps = tx_sample_clock * tx.interpolation
+
+    # print("------------------")
+    print(f"Rx Valid: {rx_gsps}, {c['coarse']}, {c['fine']}")
+    print(f"Tx Valid: {tx_gsps}, {tx_c['coarse']}, {tx_c['fine']}")
+    return gen_dict(full_config)
+
+
 def ad9081_get_rx_decimations(vcxo, rx_qmode, tx_qmode, rx_jesd_class, tx_jesd_class):
 
     all_configs = []
@@ -29,77 +79,64 @@ def ad9081_get_rx_decimations(vcxo, rx_qmode, tx_qmode, rx_jesd_class, tx_jesd_c
     cfg_rx = rx.quick_configuration_modes[rx_jesd_class][rx_qmode]
     cfg_tx = tx.quick_configuration_modes[tx_jesd_class][tx_qmode]
 
-    # conv_rates = [0.4]
+    print("\n\n\n")
+    found_pairs = []
 
     for c in cfg_rx["decimations"]:
-        for gsps in reversed(range(1, 4)):
+        if c['coarse'] != 4:
+            continue
+        print("------------------")
+        print(f"Looking for configuration: {c['coarse']},{c['fine']}")
+        found_rx_config = False
+        found_tx_config = False
+        for oogsps in reversed(range(10, 41)):
             # Determine a ADC rate in range
+            gsps = oogsps/10
             if gsps < c["conv_min"] or gsps > c["conv_max"]:
                 continue
             rx.decimation = c["coarse"] * c["fine"]
             rx.sample_clock = gsps * 1e9 / rx.decimation
             try:
                 rx._check_clock_relations()
+                found_rx_config = True
             except:
-                print("Failed to find a valid clock configuration")
                 continue
-            print(f"Rx Valid: {gsps}, {c['coarse']}, {c['fine']}")
-            done = False
-            for tx_c in cfg_tx["decimations"]:
-                for tx_mult in [4, 3, 2, 1]:
-                    tx_gsps = gsps * tx_mult * 1e9
-                    # Determine a DAC rate in range
-                    if (
-                        tx_gsps < tx.converter_clock_min
-                        or tx_gsps > tx.converter_clock_max
-                    ):
-                        continue
-                    tx.interpolation = tx_c["coarse"] * tx_c["fine"]
-                    tx.sample_clock = tx_gsps / tx.interpolation
-                    try:
-                        tx._check_clock_relations()
-                    except:
-                        print("Failed to find a valid clock configuration")
-                        continue
-                    print(f"Tx Valid: {gsps}, {c['coarse']}, {c['fine']}")
+            rx_sample_clock = gsps * 1e9 / rx.decimation
 
-                    full_config = {
-                        "rx": {
-                            "sample_clock": tx.sample_clock,
-                            "coarse": c["coarse"],
-                            "fine": c["fine"],
-                        },
-                        "tx": {
-                            "sample_clock": tx.sample_clock,
-                            "coarse": tx_c["coarse"],
-                            "fine": tx_c["fine"],
-                        },
-                    }
+            # Check TX
+            tx_c, tx_sample_clock = _ad9081_tx_config(tx, cfg_tx, gsps)
+            if not tx_c:
+                continue
 
-                    # d = gen_dict(full_config)
-                    # cfg, sys = create_jif_configuration(d, vcxo)
-                    try:
-                        d = gen_dict(full_config)
-                        cfg, sys = create_jif_configuration(d, vcxo)
-                    # except Exception as e:
-                    except Exception as e:
-                        print(e)
-                        print("Failed to create configuration")
-                        # print("Failed to create configuration", e)
-                        continue
-
-                    all_configs.append(gen_dict(full_config))
-
-                    done = True
-                    break
-                if done:
-                    # done = False
-                    break
-            if done:
-                done = False
+            # Check system
+            config = _system_check(
+                rx, tx, c, tx_c, vcxo, rx_sample_clock, tx_sample_clock
+            )
+            if config:
+                found_tx_config = True
+                if c['coarse'] > c['fine']:
+                    p = f"{c['coarse']}_{c['fine']}"
+                else:
+                    p = f"{c['fine']}_{c['coarse']}"
+                found_pairs.append(p)
+                all_configs.append(config)
                 break
 
-                # return rx.decimation, tx.interpolation
+        if c['coarse'] > c['fine']:
+            p = f"{c['coarse']}_{c['fine']}"
+        else:
+            p = f"{c['fine']}_{c['coarse']}"
+        if not found_tx_config:
+            if p in found_pairs:
+                print("Existing solution has same decimation")
+            print("Failed to find a valid configuration based on TX")
+
+        if not found_rx_config:
+            if p in found_pairs:
+                print("Existing solution has same decimation")
+            print(
+                f"No valid clock configuration found RX {c['coarse']},{c['fine']} {c}"
+            )
 
     # print(cfg)
     # return cfg_tx

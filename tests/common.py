@@ -100,4 +100,8 @@ def create_jif_configuration(param_set, vcxo=122.88e6):
         int(np.floor(float(cfg["jesd_dac"]["jesd_mode"])))
     )
 
+    # cfg["clock"]["output_clocks"]["adc_sysref"]["divider"] = (
+    #     cfg["clock"]["output_clocks"]["adc_sysref"]["divider"] // 2
+    # )
+
     return cfg, sys
