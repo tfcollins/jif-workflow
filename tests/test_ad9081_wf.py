@@ -1,80 +1,83 @@
-import adidt
-import numpy as np
-
-from pprint import pprint
-import pytest
+import logging
 import os
-import shutil
-import time
+
+import adidt
 import iio
+import pytest
 from adi import jesd
-from tqdm import tqdm
 
 import nebula
-import logging
 
 logging.getLogger().setLevel(logging.ERROR)
 
-from tests.common import create_jif_configuration, build_devicetree
-from tests.ad9081_gen import ad9081_get_rx_decimations
+from tests.ad9081_gen import ad9081_get_rx_decimations, get_rates_from_sample_rate
+from tests.common import build_devicetree, create_jif_configuration
 
 ip = os.environ.get("TARGET_IP") if "TARGET_IP" in os.environ else "analog-2.local"
-vcxo = os.environ.get("TARGET_VCXO") if "TARGET_VCXO" in os.environ else 122.88e6
+vcxo = int(os.environ.get("TARGET_VCXO")) if "TARGET_VCXO" in os.environ else 122.88e6
+tx_jesd_mode = (
+    os.environ.get("TARGET_TX_JESD_MODE")
+    if "TARGET_TX_JESD_MODE" in os.environ
+    else "9"
+)
+rx_jesd_mode = (
+    os.environ.get("TARGET_RX_JESD_MODE")
+    if "TARGET_TX_JESD_MODE" in os.environ
+    else "10.0"
+)
 
-
-def gen_configs_from_rates(rates):
-    return [
-        dict(
-            DAC_freq=int(rate),
-            ADC_freq=int(rate) // 1,
-            fddc=4,
-            cddc=4,
-            fduc=4,
-            cduc=4,
-        )
-        for rate in rates
-    ]
+# The purpose of this test is to permute the interpolators+decimators and DAC+ADC rates without changing the
+# framer rates to verify changing upstream configurations do not effect downstream
+#
+# Limitations
+#
+# ADC min/max: 1.45e9/4e9
+# DAC min/max: 2.9e9/12e9
 
 
 @pytest.mark.parametrize(
     "param_set",
-    [
-        dict(
-            DAC_freq=int(12e9),
-            ADC_freq=int(12e9) // 3,
-            fddc=4,
-            cddc=4,
-            fduc=6,
-            cduc=8,
-        ),
-        dict(
-            DAC_freq=int(4e9),
-            ADC_freq=int(4e9) // 1,
-            fddc=4,
-            cddc=4,
-            fduc=4,
-            cduc=4,
-        ),
-        dict(  # Failing case
-            DAC_freq=int(6e9),
-            ADC_freq=int(6e9) // 3,
-            fddc=4,
-            cddc=2,
-            fduc=4,
-            cduc=4,
-        ),
+    []
+    + [
+        get_rates_from_sample_rate(rate * 1e6, vcxo, rx_jesd_mode, tx_jesd_mode)
+        for rate in range(100, 501, 100)
     ]
-    # + gen_configs_from_rates([2e9, 2.5e9, 3e9, 3.5e9])
-    + ad9081_get_rx_decimations(vcxo, "10.0", "9", "jesd204b", "jesd204b"),
+    + [
+        # dict(ADC_freq=3000000000, cddc=4, fddc=2, DAC_freq=3000000000, cduc=4, fduc=4), # Case 0
+        # dict(ADC_freq=3000000000, cddc=4, fddc=4, DAC_freq=3000000000, cduc=4, fduc=4), # Case 1
+        # dict(ADC_freq=3000000000, cddc=4, fddc=4, DAC_freq=6000000000, cduc=4, fduc=4), # Case 2
+        # dict(ADC_freq=4000000000, cddc=4, fddc=4, DAC_freq=4000000000, cduc=4, fduc=4), # Case 3
+        # dict(ADC_freq=4000000000, cddc=4, fddc=8, DAC_freq=4000000000, cduc=4, fduc=4), # Case 4
+        #
+        # dict(ADC_freq=4000000000, cddc=4, fddc=4, DAC_freq=8000000000, cduc=4, fduc=8), # DRIVER FAILS TO FIND PLL
+        #
+        # dict(ADC_freq=3200000000, cddc=4, fddc=4, DAC_freq=6400000000, cduc=4, fduc=8), # Working 200
+        # dict(ADC_freq=3200000000, cddc=4, fddc=4, DAC_freq=3200000000, cduc=4, fduc=4), # Working 200
+        # dict(ADC_freq=4000000000, cddc=4, fddc=4, DAC_freq=12000000000, cduc=6, fduc=8),# Working 250
+        # dict(ADC_freq=2000000000, cddc=4, fddc=2, DAC_freq=6000000000, cduc=6, fduc=4), # Working 250
+        # dict(ADC_freq=2200000000, cddc=4, fddc=2, DAC_freq=8800000000, cduc=4, fduc=8), # Working 275
+        # dict(ADC_freq=2200000000, cddc=4, fddc=2, DAC_freq=4400000000, cduc=4, fduc=4), # Working 275
+        # dict(ADC_freq=2240000000, cddc=4, fddc=2, DAC_freq=4480000000, cduc=4, fduc=4), # Working 280
+        # dict(ADC_freq=2400000000, cddc=4, fddc=2, DAC_freq=9600000000, cduc=4, fduc=8), # Failing 300
+        # dict(ADC_freq=2400000000, cddc=4, fddc=2, DAC_freq=4800000000, cduc=4, fduc=4), # Failing 300
+        # dict(ADC_freq=3000000000, cddc=4, fddc=2, DAC_freq=6000000000, cduc=4, fduc=4), # Failing 375
+        # dict(ADC_freq=3000000000, cddc=4, fddc=2, DAC_freq=3000000000, cduc=4, fduc=2), # Failing 375
+        # dict(ADC_freq=3200000000, cddc=4, fddc=2, DAC_freq=6400000000, cduc=4, fduc=4), # Failing 400
+        # dict(ADC_freq=3200000000, cddc=4, fddc=2, DAC_freq=3200000000, cduc=4, fduc=2), # Failing 400
+    ]
+    # + ad9081_get_rx_decimations(vcxo, "10.0", "9", "jesd204b", "jesd204b"),
 )
 def test_ad9081_stock_hdl(logger, build_kernel, param_set):
 
     logger.saved["param_set"] = param_set
     logger.saved["status"] = "skipped"
+    if "not_possible" in param_set:
+        pytest.skip(f"Rate not possible: {param_set['sample_rate']}")
 
     ############################################################################
     # Generate JIF configuration
-    cfg, sys = create_jif_configuration(param_set, vcxo)
+    cfg, sys = create_jif_configuration(param_set, vcxo, rx_jesd_mode, tx_jesd_mode)
+    # return
     logger.saved["cfg"] = cfg
     logger.saved["status"] = "failed"
 
@@ -82,6 +85,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     # Generate DT fragment
     fmc = adidt.ad9081_fmc()
     clock, adc, dac = fmc.map_clocks_to_board_layout(cfg)
+    dts_filename = "ad9081_fmc_zcu102.dts"
     dts_filename = fmc.gen_dt(clock=clock, adc=adc, dac=dac)
 
     ############################################################################
@@ -124,7 +128,29 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     for dev in required_devices:
         assert dev in found_devices, f"{dev} not found"
 
+    # Read registers
+    dev = ctx.find_device("axi-ad9081-rx-hpc")
+    reg = dev.reg_read(0x0728)
+    logger.saved["RX_0x0728"] = reg
+    reg = dev.reg_read(0x00CA)
+    logger.saved["RX_0x00CA"] = reg
+    reg = dev.reg_read(0x09)
+    logger.saved["TX_0x09"] = reg
+
     dev = jesd(address=ip)
+    # Get dmesg
+    dmesg = dev.fs._run("dmesg")
+    logger.saved["dmesg"] = dmesg[0]
+
+    # Log expected device clock based on JIF config (not measured)
+    logger.saved["RX_Expected_Device_Clock"] = (
+        param_set["ADC_freq"] / param_set["cddc"] / param_set["fddc"]
+    )
+    logger.saved["TX_Expected_Device_Clock"] = (
+        param_set["DAC_freq"] / param_set["cduc"] / param_set["fduc"]
+    )
+
+    # Check JESD lanes
     jdevices_statuses = dev.get_all_statuses()
     logger.saved["jdevices_statuses"] = jdevices_statuses
     for dev in jdevices_statuses:

@@ -1,6 +1,7 @@
-import os
-import pytest
 import json
+import os
+
+import pytest
 
 from tests.common import params
 
@@ -36,10 +37,15 @@ def logger(request):
 
     yield meta
 
+    if "cfg" not in meta.saved:
+        return
+
     testname = request.node.name
     if not os.path.isdir("logs"):
         os.mkdir("logs")
+    if "dmesg" in meta.saved:
+        with open(f"logs/{testname}_dmesg.txt", "w") as f:
+            f.write(meta.saved["dmesg"])
+            del meta.saved["dmesg"]
     with open(f"logs/{testname}.json", "w") as f:
         json.dump(meta.saved, f, indent=4)
-
-    # print(meta.saved)

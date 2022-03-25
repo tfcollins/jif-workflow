@@ -70,6 +70,9 @@ def _system_check(rx, tx, c, tx_c, vcxo, rx_sample_clock, tx_sample_clock):
 
 
 def ad9081_get_rx_decimations(vcxo, rx_qmode, tx_qmode, rx_jesd_class, tx_jesd_class):
+    """Find valid converter rates (DAC+ADC) and decs/ints only based on VCXO
+    and JESD modes
+    """
 
     all_configs = []
 
@@ -83,15 +86,13 @@ def ad9081_get_rx_decimations(vcxo, rx_qmode, tx_qmode, rx_jesd_class, tx_jesd_c
     found_pairs = []
 
     for c in cfg_rx["decimations"]:
-        if c['coarse'] != 4:
-            continue
         print("------------------")
         print(f"Looking for configuration: {c['coarse']},{c['fine']}")
         found_rx_config = False
         found_tx_config = False
         for oogsps in reversed(range(10, 41)):
             # Determine a ADC rate in range
-            gsps = oogsps/10
+            gsps = oogsps / 10
             if gsps < c["conv_min"] or gsps > c["conv_max"]:
                 continue
             rx.decimation = c["coarse"] * c["fine"]
@@ -114,7 +115,7 @@ def ad9081_get_rx_decimations(vcxo, rx_qmode, tx_qmode, rx_jesd_class, tx_jesd_c
             )
             if config:
                 found_tx_config = True
-                if c['coarse'] > c['fine']:
+                if c["coarse"] > c["fine"]:
                     p = f"{c['coarse']}_{c['fine']}"
                 else:
                     p = f"{c['fine']}_{c['coarse']}"
@@ -122,7 +123,7 @@ def ad9081_get_rx_decimations(vcxo, rx_qmode, tx_qmode, rx_jesd_class, tx_jesd_c
                 all_configs.append(config)
                 break
 
-        if c['coarse'] > c['fine']:
+        if c["coarse"] > c["fine"]:
             p = f"{c['coarse']}_{c['fine']}"
         else:
             p = f"{c['fine']}_{c['coarse']}"
@@ -145,6 +146,66 @@ def ad9081_get_rx_decimations(vcxo, rx_qmode, tx_qmode, rx_jesd_class, tx_jesd_c
         + f" (Desired {len(cfg_rx['decimations'])})"
     )
     return all_configs
+
+
+def get_rates_from_sample_rate(sample_rate, vcxo, rx_jesd_mode, tx_jesd_mode):
+    """Based on a desired sample rate (RX and TX), VCXO, and JESD modes
+    determine valid decimator/interpolation/ADC rate/DAC rate.
+    """
+
+    cdcs = [1, 2, 3, 4, 6]
+    fdcs = [1, 2, 3, 4, 6, 8, 12, 16, 24]
+
+    cdcs_tx = [1, 2, 4, 6, 8, 12]
+    fdcs_tx = [1, 2, 3, 4, 6, 8]
+
+    rx = jif.ad9081_rx()
+    tx = jif.ad9081_tx()
+
+    cfg = rx.quick_configuration_modes["jesd204b"][rx_jesd_mode]
+    rx_d = [(dec["coarse"], dec["fine"]) for dec in cfg["decimations"]]
+
+    cfg = tx.quick_configuration_modes["jesd204b"][tx_jesd_mode]
+    tx_d = [(dec["coarse"], dec["fine"]) for dec in cfg["decimations"]]
+
+    print(f"----Searching for sample_rate config: {sample_rate}")
+
+    for cdc_tx in cdcs_tx:
+        for cdc_rx in cdcs:
+            for fdc_tx in fdcs_tx:
+                for fdc_rx in fdcs:
+                    # Filter out unavailable decs/ints
+                    if (cdc_rx, fdc_rx) not in rx_d:
+                        continue
+                    if (cdc_tx, fdc_tx) not in tx_d:
+                        continue
+
+                    DAC_rate = fdc_tx * cdc_tx * sample_rate
+                    ADC_rate = fdc_rx * cdc_rx * sample_rate
+                    if (
+                        DAC_rate >= 2.9e9
+                        and DAC_rate <= 12e9
+                        and ADC_rate >= 1.45e9
+                        and ADC_rate <= 4e9
+                    ):
+                        param_set = dict(
+                            DAC_freq=int(DAC_rate),
+                            ADC_freq=int(ADC_rate),
+                            fddc=fdc_rx,
+                            cddc=cdc_rx,
+                            fduc=fdc_tx,
+                            cduc=cdc_tx,
+                        )
+                        try:
+                            cfg, sys = create_jif_configuration(
+                                param_set, vcxo, rx_jesd_mode, tx_jesd_mode
+                            )
+                            print(f"----Found sample_rate config: {sample_rate}")
+                            return param_set
+                        except Exception as e:
+                            print(e)
+                            pass
+    return dict(sample_rate=sample_rate, not_possible=True)
 
 
 if __name__ == "__main__":

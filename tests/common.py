@@ -1,12 +1,19 @@
+import os
+import shutil
+
 import adijif
 import numpy as np
-import shutil
-import os
 import pytest
 
+# params = {
+#     "Vivado": "2019.1",
+#     "LinuxBranch": "2019_2",
+#     "ARCH": "arm64",
+#     "CROSS_COMPILE": "aarch64-linux-gnu-",
+# }
 params = {
-    "Vivado": "2019.1",
-    "LinuxBranch": "2019_2",
+    "Vivado": "2021.1",
+    "LinuxBranch": "master",
     "ARCH": "arm64",
     "CROSS_COMPILE": "aarch64-linux-gnu-",
 }
@@ -28,21 +35,29 @@ def build_devicetree(dts_name):
     return "system.dtb"
 
 
-def create_jif_configuration(param_set, vcxo=122.88e6):
+def create_jif_configuration(
+    param_set, vcxo=122.88e6, rx_jesd_mode="10.0", tx_jesd_mode="9"
+):
+    """Calculate clocking configuration needed by pyadi-dt to generate a devicetree
+    configuration. This will solve for the specific configuration with JIF
+    """
     ###############################################################################
     # RX
-    rx = adijif.ad9081_rx
-    params = {"jesd_class": "jesd204b", "M": 8, "L": 4, "S": 1, "Np": 16}
-    rx_modes = adijif.utils.get_jesd_mode_from_params(rx, **params)
-    # print("RX", rx_modes)
-    assert len(rx_modes) == 1, f"Expected 1 mode, got {len(rx_modes)}"
+    # rx = adijif.ad9081_rx
+    # params = {"jesd_class": "jesd204b", "M": 8, "L": 4, "S": 1, "Np": 16}
+    # rx_modes = adijif.utils.get_jesd_mode_from_params(rx, **params)
+    # # print("RX", rx_modes)
+    # assert len(rx_modes) == 1, f"Expected 1 mode, got {len(rx_modes)}"
 
-    # TX
-    tx = adijif.ad9081_tx
-    params = {"jesd_class": "jesd204b", "M": 8, "L": 4, "S": 1, "Np": 16}
-    tx_modes = adijif.utils.get_jesd_mode_from_params(tx, **params)
-    # print("TX", tx_modes)
-    assert len(tx_modes) == 1, f"Expected 1 mode, got {len(tx_modes)}"
+    # # TX
+    # tx = adijif.ad9081_tx
+    # params = {"jesd_class": "jesd204b", "M": 8, "L": 4, "S": 1, "Np": 16}
+    # tx_modes = adijif.utils.get_jesd_mode_from_params(tx, **params)
+    # # print("TX", tx_modes)
+    # assert len(tx_modes) == 1, f"Expected 1 mode, got {len(tx_modes)}"
+
+    #  rx_jesd_mode = rx_modes[0]["mode"]
+    #  tx_jesd_mode = tx_modes[0]["mode"]
 
     ###############################################################################
     # Set up JIF solver to generate the clocking details for new sample rate
@@ -62,8 +77,8 @@ def create_jif_configuration(param_set, vcxo=122.88e6):
     sys.converter.clocking_option = "integrated_pll"
     sys.fpga.request_fpga_core_clock_ref = True  # force reference to be core clock rate
 
-    sys.converter.dac.set_quick_configuration_mode(tx_modes[0]["mode"], "jesd204b")
-    sys.converter.adc.set_quick_configuration_mode(rx_modes[0]["mode"], "jesd204b")
+    sys.converter.dac.set_quick_configuration_mode(tx_jesd_mode, "jesd204b")
+    sys.converter.adc.set_quick_configuration_mode(rx_jesd_mode, "jesd204b")
 
     sys.converter.adc.sample_clock = rx_sample_rate
     sys.converter.dac.sample_clock = tx_sample_rate
@@ -74,12 +89,21 @@ def create_jif_configuration(param_set, vcxo=122.88e6):
     sys.converter.adc.datapath.fddc_decimations = [fddc] * 8
     sys.converter.adc.datapath.cddc_decimations = [cddc] * 4
     sys.converter.adc.datapath.cddc_enabled = [True] * 4
-    sys.converter.adc.datapath.fddc_enabled = [True] * 8
+    sys.converter.adc.datapath.fddc_enabled = [
+        True,
+        True,
+        False,
+        False,
+        True,
+        True,
+        False,
+        False,
+    ]
 
     sys.converter.dac.datapath.cduc_interpolation = cduc
     sys.converter.dac.datapath.fduc_interpolation = fduc
     sys.converter.dac.datapath.cduc_enabled = [True] * 4
-    sys.converter.dac.datapath.fduc_enabled = [True] * 8
+    sys.converter.dac.datapath.fduc_enabled = [True] * 4
 
     sys.converter.adc._check_clock_relations()
     sys.converter.dac._check_clock_relations()
@@ -100,8 +124,11 @@ def create_jif_configuration(param_set, vcxo=122.88e6):
         int(np.floor(float(cfg["jesd_dac"]["jesd_mode"])))
     )
 
-    # cfg["clock"]["output_clocks"]["adc_sysref"]["divider"] = (
-    #     cfg["clock"]["output_clocks"]["adc_sysref"]["divider"] // 2
+    # cfg["clock"]["output_clocks"]["adc_fpga_ref_clk"]["divider"] = (
+    #     cfg["clock"]["output_clocks"]["adc_fpga_ref_clk"]["divider"] // 2
+    # )
+    # cfg["clock"]["output_clocks"]["dac_fpga_ref_clk"]["divider"] = (
+    #     cfg["clock"]["output_clocks"]["dac_fpga_ref_clk"]["divider"] // 2
     # )
 
     return cfg, sys
