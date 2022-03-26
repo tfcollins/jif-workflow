@@ -7,3 +7,6 @@
 [submodule "nebula"]
 	path = nebula
 	url = https://github.com/sdgtt/nebula.git
+[submodule "notebooks/logs"]
+	path = notebooks/logs
+	url = https://github.com/tfcollins/jif-workflow-logs.git
