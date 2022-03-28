@@ -22,6 +22,20 @@ Activate environment
 source .venv/bin/activate
 ```
 
+## Hardware Configuration
+
+The current workflow testing assumes the use of a AD9081+ZCU102 and the current master branch BOOT.BIN and Kernel are already being used. The board must also correctly boot. Before running any tests, first boot the board.
+
+To help make sure the board is booted before checking for the drivers and the link status, UART is monitored for the login prompt. This is done through the nebula repo, which must be configured. To make this function the tty must be set correctly in the **ad9081.yaml** of the repo's root:
+
+```
+zynqmp-zcu102-rev10-ad9081:
+  ...
+  uart-config:
+  - address: /dev/ttyUSB0 # <- Update
+```
+
+
 ## Running the workflow
 
 Worflow runs are set up as pytest unittest since it makes handling errors and state much much simpler. There is only one test workflow but other would have the similar syntax. This should be run from the root of the *jif-workflow* repo:
