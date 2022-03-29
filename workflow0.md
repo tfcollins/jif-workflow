@@ -8,7 +8,7 @@
 
 The test workflow follows the path in the figure above, by starting with a high-level sample rate then translating that down to the hardware to configuration and validation. This leverages 4 main python libraries:
 
-- pyadi-jif: Configuration generation and validation
-- pyadi-dt: DeviceTree Translation
-- pyadi-iio: IIO and SSH access
-- nebula: Hardware management for boot files and UART control
+- <span style="color:red">pyadi-jif</span>: Configuration generation and validation
+- <span style="color:green">pyadi-dt</span>: DeviceTree Translation
+- <span style="color:purple">pyadi-iio</span>: IIO and SSH access
+- <span style="color:blue">nebula</span>: Hardware management for boot files and UART control

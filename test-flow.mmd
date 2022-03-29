@@ -1,2 +1,18 @@
-graph TD
-A[Client] --> B[Load Balancer]
+flowchart TD
+
+	A[Select Sample Rate] --> B[Generate Valid DP Config];
+	B --> C[Generate Clock Config JIF]
+	C --> D[Generate DeviceTree]
+	D --> E[Update Board with New DT]
+	E --> F[Check IIO Driver Exist]
+	F --> G[Check Links Up]
+	G --> A
+
+	style A fill:red
+	style B fill:red
+	style C fill:red
+	style D fill:green
+	style E fill:blue
+	style F fill:purple
+	style G fill:purple
+
