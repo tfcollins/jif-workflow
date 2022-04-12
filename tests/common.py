@@ -73,7 +73,15 @@ def create_jif_configuration(
 
     sys = adijif.system("ad9081", "hmc7044", "xilinx", vcxo, solver="CPLEX")
     sys.fpga.setup_by_dev_kit_name("zcu102")
-    sys.fpga.sys_clk_select = "GTH34_SYSCLK_QPLL0"  # Use faster QPLL
+
+    sys.fpga.out_clk_select = {
+        # sys.converter.adc: ["XCVR_REFCLK","XCVR_REFCLK_DIV2","XCVR_PROGDIV_CLK"],
+        sys.converter.adc: "XCVR_PROGDIV_CLK",
+        sys.converter.dac: "XCVR_REFCLK_DIV2",
+    }
+    sys.fpga.force_qpll = True
+
+    # sys.fpga.sys_clk_select = "GTH34_SYSCLK_QPLL0"  # Use faster QPLL
     sys.converter.clocking_option = "integrated_pll"
     sys.fpga.request_fpga_core_clock_ref = True  # force reference to be core clock rate
 
@@ -125,7 +133,7 @@ def create_jif_configuration(
     )
 
     # cfg["clock"]["output_clocks"]["adc_fpga_ref_clk"]["divider"] = (
-    #     cfg["clock"]["output_clocks"]["adc_fpga_ref_clk"]["divider"] // 2
+    #     cfg["clock"]["output_clocks"]["adc_fpga_ref_clk"]["divider"] * 2
     # )
     # cfg["clock"]["output_clocks"]["dac_fpga_ref_clk"]["divider"] = (
     #     cfg["clock"]["output_clocks"]["dac_fpga_ref_clk"]["divider"] // 2

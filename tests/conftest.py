@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 
 import pytest
 
@@ -49,3 +50,7 @@ def logger(request):
             del meta.saved["dmesg"]
     with open(f"logs/{testname}.json", "w") as f:
         json.dump(meta.saved, f, indent=4)
+
+    dts = "ad9081_fmc_zcu102.dts"
+    if os.path.isfile(dts):
+        shutil.copy(dts, os.path.join("logs",f"{testname}_{dts}"))

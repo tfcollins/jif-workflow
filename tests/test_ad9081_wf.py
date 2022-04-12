@@ -40,7 +40,7 @@ rx_jesd_mode = (
     []
     + [
         get_rates_from_sample_rate(rate * 1e6, vcxo, rx_jesd_mode, tx_jesd_mode)
-        for rate in range(100, 501, 100)
+        for rate in range(100, 401, 1)
     ]
     + [
         # dict(ADC_freq=3000000000, cddc=4, fddc=2, DAC_freq=3000000000, cduc=4, fduc=4), # Case 0
@@ -84,9 +84,9 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     ############################################################################
     # Generate DT fragment
     fmc = adidt.ad9081_fmc()
-    clock, adc, dac = fmc.map_clocks_to_board_layout(cfg)
-    dts_filename = "ad9081_fmc_zcu102.dts"
-    dts_filename = fmc.gen_dt(clock=clock, adc=adc, dac=dac)
+    clock, adc, dac, fpga = fmc.map_clocks_to_board_layout(cfg)
+    # dts_filename = "ad9081_fmc_zcu102.dts"
+    dts_filename = fmc.gen_dt(clock=clock, adc=adc, dac=dac, fpga=fpga)
 
     ############################################################################
     # Build new devicetree
