@@ -31,7 +31,7 @@ lock(label: 'adgt_test_harness_boards') {
     harness.set_log_artifacts(false)
     harness.set_enable_resource_queuing(true)
     harness.set_elastic_server('192.168.10.1')
-    harness.set_required_hardware(["zynqmp-zcu102-ad9081"])
+    harness.set_required_hardware(["zynqmp-zcu102-rev10-ad9081"])
     harness.set_nebula_local_fs_source_root("artifactory.analog.com")
     harness.set_docker_args(['Vivado'])
   
