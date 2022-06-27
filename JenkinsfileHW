@@ -9,7 +9,7 @@ lock(label: 'adgt_test_harness_boards') {
     def harness = getGauntlet(hdlBranch, linuxBranch, bootPartitionBranch, firmwareVersion, bootfile_source)
 
     //save what triggered the job
-    harness.set_job_trigger(jenkins_job_trigger)
+    //harness.set_job_trigger(jenkins_job_trigger)
   
     //udpate repos
     harness.set_env('nebula_branch','dev')
