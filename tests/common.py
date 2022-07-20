@@ -27,10 +27,16 @@ def build_devicetree(dts_name):
     )
     os.chdir("linux")
     cmd = f". /opt/Xilinx/Vivado/{params['Vivado']}/settings64.sh ; "
+    cmd = "export DTS_BFLAGS=-@ ; "
     cmd += f"export ARCH={params['ARCH']} ; "
     cmd += f"export CROSS_COMPILE={params['CROSS_COMPILE']} ; "
     os.system(f"{cmd} make xilinx/{dtb_name}")
+    if not os.path.isfile(f"arch/arm64/boot/dts/xilinx/{dtb_name}"):
+        raise Exception(f"Failed to build {dtb_name}")
+
     shutil.copy(f"arch/arm64/boot/dts/xilinx/{dtb_name}", "../system.dtb")
+    os.system(f"rm arch/arm64/boot/dts/xilinx/{dts_name}")
+    os.system(f"rm arch/arm64/boot/dts/xilinx/{dtb_name}")
     os.chdir("..")
     return "system.dtb"
 
@@ -140,3 +146,66 @@ def create_jif_configuration(
     # )
 
     return cfg, sys
+
+def create_jif_configuration_ad9680(
+    param_set, vcxo=125e6, rx_jesd_mode=str(0x88), tx_jesd_mode="4"
+):
+    """Calculate clocking configuration needed by pyadi-dt to generate a devicetree
+    configuration. This will solve for the specific configuration with JIF
+    """
+
+    ###############################################################################
+    # Set up JIF solver to generate the clocking details for new sample rate
+
+    DAC_freq = param_set["DAC_freq"]
+    ADC_freq = param_set["ADC_freq"]
+    ddc = param_set["ddc"]
+    duc = param_set["duc"]
+    tx_sample_rate = DAC_freq // (duc)
+    rx_sample_rate = ADC_freq // (ddc)
+
+    sys = adijif.system(["ad9680","ad9144"], "ad9523_1", "xilinx", vcxo, solver="CPLEX")
+    sys.fpga.setup_by_dev_kit_name("zcu102")
+
+    # sys.fpga.out_clk_select = {
+    #     sys.converter[0]: "XCVR_PROGDIV_CLK",
+    #     sys.converter[1]: "XCVR_PROGDIV_CLK",
+    # }
+    # THIS IS REQUIRED FOR ZCU102
+    sys.fpga.force_qpll = {
+        sys.converter[0]: False,
+        sys.converter[1]: True,
+    }
+    sys.fpga.force_cpll = {
+        sys.converter[0]: True,
+        sys.converter[1]: False,
+    }
+
+    sys.converter[0].clocking_option = "direct"
+    sys.converter[1].clocking_option = "direct"
+    sys.fpga.request_fpga_core_clock_ref = True  # force reference to be core clock rate
+
+    sys.converter[0].set_quick_configuration_mode(rx_jesd_mode, "jesd204b")
+    sys.converter[1].set_quick_configuration_mode(tx_jesd_mode, "jesd204b")
+
+    sys.converter[0].sample_clock = rx_sample_rate
+    sys.converter[1].sample_clock = tx_sample_rate
+
+    sys.converter[0].decimation = ddc
+    sys.converter[1].interpolation = duc
+
+    sys.converter[0]._check_clock_relations()
+    sys.converter[1]._check_clock_relations()
+
+    cfg = sys.solve()
+
+    # Use older mode naming
+    cfg["jesd_AD9680"]["jesd_mode"] = str(
+        int(np.floor(float(cfg["jesd_AD9680"]["jesd_mode"])))
+    )
+    cfg["jesd_AD9144"]["jesd_mode"] = str(
+        int(np.floor(float(cfg["jesd_AD9144"]["jesd_mode"])))
+    )
+
+    return cfg, sys
+

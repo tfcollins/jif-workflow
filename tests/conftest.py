@@ -12,16 +12,17 @@ from tests.common import params
     params=[params],
 )
 def build_kernel(request):  # sourcery skip: raise-specific-error
-    if not os.path.exists(
-        f"/opt/Xilinx/Vivado/{request.param['Vivado']}/settings64.sh"
-    ):
-        raise Exception("No Vivado settings found")
+    # if not os.path.exists(
+    #     f"/opt/Xilinx/Vivado/{request.param['Vivado']}/settings64.sh"
+    # ):
+    #     raise Exception("No Vivado settings found")
     if not os.path.isdir("linux"):
         os.system(
             f"git clone https://github.com/analogdevicesinc/linux.git --depth=1 -b {request.param['LinuxBranch']}"
         )
     os.chdir("linux")
-    cmd = f". /opt/Xilinx/Vivado/{request.param['Vivado']}/settings64.sh ; "
+    # cmd = f". /opt/Xilinx/Vivado/{request.param['Vivado']}/settings64.sh ; "
+    cmd = ""
     cmd += f"export ARCH={request.param['ARCH']} ; "
     cmd += f"export CROSS_COMPILE={request.param['CROSS_COMPILE']} ; "
     os.system(f"{cmd} make adi_zynqmp_defconfig")
