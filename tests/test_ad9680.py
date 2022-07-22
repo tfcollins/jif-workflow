@@ -84,7 +84,7 @@ def test_ad9680_stock_hdl(logger, build_kernel, param_set):
     nb = nebula.manager(
         monitor_type="uart",
         # configfilename="daq2.yaml",
-        configfilename=None,
+        configfilename="/etc/default/nebula",
         board_name=board_name,
         extras=None,
     )
