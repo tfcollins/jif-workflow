@@ -25,6 +25,8 @@ rx_jesd_mode = (
     else str(0x88)
 )
 
+arch = os.environ.get("ARCH") if "ARCH" in os.environ else "arm64"
+
 # The purpose of this test is to permute the interpolators+decimators and DAC+ADC rates without changing the
 # framer rates to verify changing upstream configurations do not effect downstream
 
@@ -56,7 +58,7 @@ def test_ad9680_stock_hdl(logger, build_kernel, param_set):
     # Generate DT fragment
     fmc = adidt.daq2()
     clock, adc, dac, fpga = fmc.map_clocks_to_board_layout(cfg)
-    dts_filename = fmc.gen_dt(clock=clock, adc=adc, dac=dac, fpga=fpga)
+    dts_filename = fmc.gen_dt(clock=clock, adc=adc, dac=dac, fpga=fpga, arch=arch)
 
     ############################################################################
     # Build new devicetree
@@ -70,13 +72,20 @@ def test_ad9680_stock_hdl(logger, build_kernel, param_set):
     file_list = [dtb_filename]
     show = True
 
-    d = adidt.dt(dt_source="remote_sd", ip=ip, arch="arm64")
+    d = adidt.dt(dt_source="remote_sd", ip=ip, arch=arch)
     d.copy_local_files_to_remote_sd_card(file_list, show=show)
+
+    if arch == "arm64":
+        board_name="zynqmp-zcu102-rev10-fmcdaq2"
+    else:
+        board_name="zynq-zc706-adv7511-fmcdaq2"
+
 
     nb = nebula.manager(
         monitor_type="uart",
-        configfilename="daq2.yaml",
-        board_name="zynqmp-zcu102-rev10-fmcdaq2",
+        # configfilename="daq2.yaml",
+        configfilename=None,
+        board_name=board_name,
         extras=None,
     )
 

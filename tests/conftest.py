@@ -4,8 +4,11 @@ import shutil
 
 import pytest
 
-from tests.common import params
-
+arch = os.environ.get("ARCH") if "ARCH" in os.environ else "arm64"
+if arch == "arm64":
+    from tests.common import params
+else:
+    from tests.common import params32 as params
 
 @pytest.fixture(
     scope="module",
@@ -25,8 +28,12 @@ def build_kernel(request):  # sourcery skip: raise-specific-error
     cmd = ""
     cmd += f"export ARCH={request.param['ARCH']} ; "
     cmd += f"export CROSS_COMPILE={request.param['CROSS_COMPILE']} ; "
-    os.system(f"{cmd} make adi_zynqmp_defconfig")
-    os.system(f"{cmd} make -j$(nproc) Image UIMAGE_LOADADDR=0x8000")
+    if arch == "arm64":
+        os.system(f"{cmd} make adi_zynqmp_defconfig")
+        os.system(f"{cmd} make -j$(nproc) Image UIMAGE_LOADADDR=0x8000")
+    else:
+        os.system(f"{cmd} make zynq_xcomm_adv7511_defconfig")
+        os.system(f"{cmd} make -j$(nproc) UIMAGE_LOADADDR=0x8000 uImage")
     os.chdir("..")
 
 

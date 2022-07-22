@@ -17,7 +17,12 @@ params = {
     "ARCH": "arm64",
     "CROSS_COMPILE": "aarch64-linux-gnu-",
 }
-
+params32 = {
+    "Vivado": "2021.1",
+    "LinuxBranch": "master",
+    "ARCH": "arm",
+    "CROSS_COMPILE": "arm-linux-gnueabihf-",
+}
 
 def build_devicetree(dts_name):
     dtb_name = dts_name.replace(".dts", ".dtb")
@@ -40,6 +45,27 @@ def build_devicetree(dts_name):
     os.chdir("..")
     return "system.dtb"
 
+
+def build_devicetree_arm32(dts_name):
+    dtb_name = dts_name.replace(".dts", ".dtb")
+    shutil.copy(
+        dts_name,
+        f"linux/arch/arm/boot/dts/xilinx/{dts_name}",
+    )
+    os.chdir("linux")
+    cmd = f". /opt/Xilinx/Vivado/{params32['Vivado']}/settings64.sh ; "
+    cmd = "export DTS_BFLAGS=-@ ; "
+    cmd += f"export ARCH={params32['ARCH']} ; "
+    cmd += f"export CROSS_COMPILE={params32['CROSS_COMPILE']} ; "
+    os.system(f"{cmd} make {dtb_name}")
+    if not os.path.isfile(f"arch/arm/boot/dts/xilinx/{dtb_name}"):
+        raise Exception(f"Failed to build {dtb_name}")
+
+    shutil.copy(f"arch/arm/boot/dts/xilinx/{dtb_name}", "../devicetree.dtb")
+    os.system(f"rm arch/arm/boot/dts/xilinx/{dts_name}")
+    os.system(f"rm arch/arm/boot/dts/xilinx/{dtb_name}")
+    os.chdir("..")
+    return "devicetree.dtb"
 
 def create_jif_configuration(
     param_set, vcxo=122.88e6, rx_jesd_mode="10.0", tx_jesd_mode="9"
