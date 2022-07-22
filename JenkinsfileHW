@@ -59,7 +59,7 @@ lock(label: 'adgt_test_harness_boards') {
                 checkout scm
                 sh 'git submodule update --init --recursive'
                 dir('nebula'){
-                    sh 'python3 -m setup.py install'
+                    sh 'python3 setup.py install'
                 }
                 // sh 'pip3 install nebula/.'
                 sh 'pip3 install pyadi-dt/.'
