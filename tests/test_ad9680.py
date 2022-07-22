@@ -39,6 +39,13 @@ arch = os.environ.get("ARCH") if "ARCH" in os.environ else "arm64"
         dict(ADC_freq=int(1e9*3/4), ddc=1, DAC_freq=int(1e9*3/4), duc=1), # Case 1
         dict(ADC_freq=int(1e9//2), ddc=1, DAC_freq=int(1e9//2), duc=1), # Case 2
         dict(ADC_freq=int(375e6), ddc=1, DAC_freq=int(250e6), duc=1), # Case 3
+        dict(ADC_freq=int(900e6), ddc=1, DAC_freq=int(900e6), duc=1), # Case 4
+        dict(ADC_freq=int(800e6), ddc=1, DAC_freq=int(800e6), duc=1), # Case 5
+        dict(ADC_freq=int(700e6), ddc=1, DAC_freq=int(700e6), duc=1), # Case 6
+        dict(ADC_freq=int(600e6), ddc=1, DAC_freq=int(600e6), duc=1), # Case 7
+        dict(ADC_freq=int(500e6), ddc=1, DAC_freq=int(500e6), duc=1), # Case 8
+        dict(ADC_freq=int(400e6), ddc=1, DAC_freq=int(400e6), duc=1), # Case 9
+        dict(ADC_freq=int(300e6), ddc=1, DAC_freq=int(300e6), duc=1), # Case 10
     ]
 )
 def test_ad9680_stock_hdl(logger, build_kernel, param_set):
