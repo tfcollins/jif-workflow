@@ -55,7 +55,7 @@ lock(label: 'adgt_test_harness_boards') {
     def stage = { String board ->
         try {
             stage("Test JIF") {
-                sh 'sudo apt install -y gcc-arm-linux-gnueabihf libc6-dev-armhf-cross qemu-arm-static'
+                sh 'sudo apt install -y gcc-arm-linux-gnueabihf libc6-dev-armhf-cross'
                 sh 'sudo apt install -y gcc-aarch64-linux-gnu make bc u-boot-tools flex bison libssl-dev tar kmod'
                 def ip = nebula('update-config network-config dutip --board-name=' + board)
                 checkout scm
