@@ -58,6 +58,7 @@ lock(label: 'adgt_test_harness_boards') {
                 def ip = nebula('update-config network-config dutip --board-name=' + board)
                 checkout scm
                 sh 'git submodule update --init --recursive'
+                sh 'pip install -r requirements.txt'
                 dir('nebula'){
                     sh 'python3 setup.py install'
                 }
