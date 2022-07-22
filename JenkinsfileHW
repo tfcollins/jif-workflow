@@ -64,7 +64,7 @@ lock(label: 'adgt_test_harness_boards') {
                 // sh 'pip3 install nebula/.'
                 sh 'pip3 install pyadi-dt/.'
                 sh 'pip3 install pyadi-jif/.'
-                sh 'rm ad9081.yml'
+                // sh 'rm ad9081.yml'
                 sh 'ARCH=arm TARGET_IP='+ip+' python3 -m pytest -vs tests/test_ad9680.py'
             }
         }
