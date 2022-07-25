@@ -35,18 +35,21 @@ arch = os.environ.get("ARCH") if "ARCH" in os.environ else "arm64"
     "param_set",
     []
     + [
-        dict(ADC_freq=int(1e9), ddc=1, DAC_freq=int(1e9), duc=1), # Case 0
-        dict(ADC_freq=int(1e9*3/4), ddc=1, DAC_freq=int(1e9*3/4), duc=1), # Case 1
-        dict(ADC_freq=int(1e9//2), ddc=1, DAC_freq=int(1e9//2), duc=1), # Case 2
-        dict(ADC_freq=int(375e6), ddc=1, DAC_freq=int(250e6), duc=1), # Case 3
-        dict(ADC_freq=int(900e6), ddc=1, DAC_freq=int(900e6), duc=1), # Case 4
-        dict(ADC_freq=int(800e6), ddc=1, DAC_freq=int(800e6), duc=1), # Case 5
-        dict(ADC_freq=int(700e6), ddc=1, DAC_freq=int(700e6), duc=1), # Case 6
-        dict(ADC_freq=int(600e6), ddc=1, DAC_freq=int(600e6), duc=1), # Case 7
-        dict(ADC_freq=int(500e6), ddc=1, DAC_freq=int(500e6), duc=1), # Case 8
-        dict(ADC_freq=int(400e6), ddc=1, DAC_freq=int(400e6), duc=1), # Case 9
-        dict(ADC_freq=int(300e6), ddc=1, DAC_freq=int(300e6), duc=1), # Case 10
+        dict(ADC_freq=int(1e9), ddc=1, DAC_freq=int(1e9), duc=1),  # Case 0
+        dict(
+            ADC_freq=int(1e9 * 3 / 4), ddc=1, DAC_freq=int(1e9 * 3 / 4), duc=1
+        ),  # Case 1
+        dict(ADC_freq=int(1e9 // 2), ddc=1, DAC_freq=int(1e9 // 2), duc=1),  # Case 2
+        dict(ADC_freq=int(375e6), ddc=1, DAC_freq=int(250e6), duc=1),  # Case 3
     ]
+    + [
+        dict(ADC_freq=int(rate * 100e6), ddc=1, DAC_freq=int(rate * 100e6), duc=1)
+        for rate in range(1, 10)
+    ],
+    +[
+        dict(ADC_freq=int(1e9), ddc=1, DAC_freq=int(1e9), duc=1, lmfc_divisor=div)
+        for div in range(1, 10)
+    ],
 )
 def test_ad9680_stock_hdl(logger, build_kernel, param_set):
 
@@ -57,7 +60,13 @@ def test_ad9680_stock_hdl(logger, build_kernel, param_set):
 
     ############################################################################
     # Generate JIF configuration
-    cfg, sys = create_jif_configuration_ad9680(param_set, vcxo, rx_jesd_mode, tx_jesd_mode)
+    if lmfc_divisor in param_set:
+        lmfc_divisor = param_set["lmfc_divisor"]
+    else:
+        lmfc_divisor = None
+    cfg, sys = create_jif_configuration_ad9680(
+        param_set, vcxo, rx_jesd_mode, tx_jesd_mode, lmfc_divisor
+    )
     logger.saved["cfg"] = cfg
     logger.saved["status"] = "failed"
 
@@ -83,10 +92,9 @@ def test_ad9680_stock_hdl(logger, build_kernel, param_set):
     d.copy_local_files_to_remote_sd_card(file_list, show=show)
 
     if arch == "arm64":
-        board_name="zynqmp-zcu102-rev10-fmcdaq2"
+        board_name = "zynqmp-zcu102-rev10-fmcdaq2"
     else:
-        board_name="zynq-zc706-adv7511-fmcdaq2"
-
+        board_name = "zynq-zc706-adv7511-fmcdaq2"
 
     nb = nebula.manager(
         monitor_type="uart",
@@ -129,12 +137,8 @@ def test_ad9680_stock_hdl(logger, build_kernel, param_set):
     logger.saved["dmesg"] = dmesg[0]
 
     # Log expected device clock based on JIF config (not measured)
-    logger.saved["RX_Expected_Device_Clock"] = (
-        param_set["ADC_freq"] / param_set["ddc"]
-    )
-    logger.saved["TX_Expected_Device_Clock"] = (
-        param_set["DAC_freq"] / param_set["duc"]
-    )
+    logger.saved["RX_Expected_Device_Clock"] = param_set["ADC_freq"] / param_set["ddc"]
+    logger.saved["TX_Expected_Device_Clock"] = param_set["DAC_freq"] / param_set["duc"]
 
     # Check JESD lanes
     jdevices_statuses = dev.get_all_statuses()
