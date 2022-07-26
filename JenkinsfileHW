@@ -74,6 +74,7 @@ lock(label: 'adgt_test_harness_boards') {
         finally
         {
             junit testResults: 'results.xml', allowEmptyResults: true
+            archiveArtifacts artifacts: '*.log', followSymlinks: false, allowEmptyArchive: true
         }
     }
     harness.add_stage(stage,'continueWhenFail')
