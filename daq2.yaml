@@ -1,0 +1,32 @@
+zynqmp-zcu102-rev10-fmcdaq2:
+  board-config:
+  - board-name: zynqmp-zcu102-rev10-fmcdaq2
+  - carrier: ZCU102
+  - daughter: FMCDAQ2
+  - monitoring-interface: uart
+  - allow-jtag: False
+  downloader-config:
+  - reference_boot_folder: zynqmp-zcu102-rev10-fmcdaq2
+  - hdl_folder: dac_fmc_ebz_zcu102
+  driver-config:
+  - iio_device_names:
+    - hmc7044
+    - axi-ad9172-hpc
+  netbox-config:
+  - netbox_server: 10.116.171.86
+  - netbox_server_port: 8000
+  - netbox_api_token: 0123456789abcdef0123456789abcdef01234567
+  network-config:
+  - dutip: 192.168.86.237
+  - dhcp: True
+  pdu-config:
+  - pdu_type: cyberpower
+  - pduip: 192.168.10.22
+  - outlet: 5
+  uart-config:
+  - address: /dev/ttyUSB0
+  - baudrate: 115200
+  - logfilename: zynqmp-zcu102-rev10-fmcdaq2.log
+  # jtag-config:
+  # - jtag_cable_id: '210308AE59AA'
+  # - jtag_cpu_target_name: 'Cortex-A53*#0'
