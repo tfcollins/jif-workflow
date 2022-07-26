@@ -12,7 +12,7 @@ logging.getLogger().setLevel(logging.ERROR)
 
 from tests.common import build_devicetree, create_jif_configuration_ad9680
 
-ip = os.environ.get("TARGET_IP") if "TARGET_IP" in os.environ else "192.168.86.243"
+ip = os.environ.get("TARGET_IP") if "TARGET_IP" in os.environ else "analog.local"
 vcxo = int(os.environ.get("TARGET_VCXO")) if "TARGET_VCXO" in os.environ else 125e6
 tx_jesd_mode = (
     os.environ.get("TARGET_TX_JESD_MODE")
