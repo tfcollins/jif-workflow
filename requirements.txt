@@ -3,3 +3,6 @@ tqdm
 pylibiio
 pyadi-iio
 black
+pyadi-jif/.[cplex]
+pyadi-dt/.
+nebula/.
