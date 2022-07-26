@@ -33,6 +33,12 @@ zynqmp-zcu102-rev10-ad9081:
   - address: /dev/ttyUSB0 # <- Update
 ```
 
+The workflow will also leverage SSH and IIO over IP so an IP must be set as an environmental variable. Otherwise **analog.local** is assumed:
+
+```
+export TARGET_IP=192.168.3.1
+```
+
 
 ## Running the workflow
 
