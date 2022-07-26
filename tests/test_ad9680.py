@@ -45,10 +45,10 @@ arch = os.environ.get("ARCH") if "ARCH" in os.environ else "arm64"
     + [
         dict(ADC_freq=int(rate * 100e6), ddc=1, DAC_freq=int(rate * 100e6), duc=1)
         for rate in range(1, 10)
-    ],
-    +[
+    ]
+    + [
         dict(ADC_freq=int(1e9), ddc=1, DAC_freq=int(1e9), duc=1, lmfc_divisor=div)
-        for div in range(1, 10)
+        for div in range(1, 40)
     ],
 )
 def test_ad9680_stock_hdl(logger, build_kernel, param_set):
@@ -60,7 +60,7 @@ def test_ad9680_stock_hdl(logger, build_kernel, param_set):
 
     ############################################################################
     # Generate JIF configuration
-    if lmfc_divisor in param_set:
+    if "lmfc_divisor" in param_set:
         lmfc_divisor = param_set["lmfc_divisor"]
     else:
         lmfc_divisor = None

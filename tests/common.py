@@ -174,7 +174,7 @@ def create_jif_configuration(
     return cfg, sys
 
 def create_jif_configuration_ad9680(
-    param_set, vcxo=125e6, rx_jesd_mode=str(0x88), tx_jesd_mode="4"
+    param_set, vcxo=125e6, rx_jesd_mode=str(0x88), tx_jesd_mode="4", lmfc_divisor=None
 ):
     """Calculate clocking configuration needed by pyadi-dt to generate a devicetree
     configuration. This will solve for the specific configuration with JIF
@@ -206,6 +206,11 @@ def create_jif_configuration_ad9680(
         sys.converter[0]: True,
         sys.converter[1]: False,
     }
+
+    if lmfc_divisor:
+        if not isinstance(lmfc_divisor, list):
+            lmfc_divisor = [lmfc_divisor]
+        sys.converter[0]._lmfc_sys_divisor = lmfc_divisor
 
     sys.converter[0].clocking_option = "direct"
     sys.converter[1].clocking_option = "direct"
