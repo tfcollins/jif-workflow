@@ -1,6 +1,8 @@
 # jif-worflow
 Complete end to end workflow examples and tests for JESD configurations of ADI board
 
+See [workflow0](workflow0.md) for a breakdown of the different projects and flow of the test benches.
+
 ## Set up codebase
 
 Clone repo with all submodules and enter repo
@@ -13,18 +15,14 @@ cd jif-workflow
 Set up python in virtualenv and install dependencies
 
 ```bash
-make dev-setup
-```
-
-Activate environment 
-
-```bash
+virtualenv .venv
 source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
 ## Hardware Configuration
 
-The current workflow testing assumes the use of a AD9081+ZCU102 and the current master branch BOOT.BIN and Kernel are already being used. The board must also correctly boot. Before running any tests, first boot the board.
+The current workflow testing assumes the use of a AD9081+ZCU102 or a DAQ2+ZC706 and the current master branch BOOT.BIN and Kernel are already being used. The board must also correctly boot. Before running any tests, first boot the board.
 
 To help make sure the board is booted before checking for the drivers and the link status, UART is monitored for the login prompt. This is done through the nebula repo, which must be configured. To make this function the tty must be set correctly in the **ad9081.yaml** of the repo's root:
 
