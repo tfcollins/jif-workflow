@@ -4,6 +4,13 @@ import shutil
 
 import pytest
 
+# zynqmp-zcu102-rev10-ad9081-m8-l4-vcxo122p88.dts
+
+repo = os.environ.get("CUSTOM_GIT") if "CUSTOM_GIT" in os.environ else "https://github.com/analogdevicesinc/linux.git"
+
+linux_parent = os.environ.get("LINUX_DIR") if "LINUX_DIR" in os.environ else os.getcwd()
+
+
 arch = os.environ.get("ARCH") if "ARCH" in os.environ else "arm64"
 if arch == "arm64":
     from tests.common import params
@@ -19,11 +26,14 @@ def build_kernel(request):  # sourcery skip: raise-specific-error
     #     f"/opt/Xilinx/Vivado/{request.param['Vivado']}/settings64.sh"
     # ):
     #     raise Exception("No Vivado settings found")
-    if not os.path.isdir("linux"):
+    loc = os.path.join(linux_parent, "linux")
+    org = os.getcwd()
+
+    if not os.path.isdir(loc):
         os.system(
-            f"git clone https://github.com/analogdevicesinc/linux.git --depth=1 -b {request.param['LinuxBranch']}"
+            f"git clone {repo} --depth=1 -b {request.param['LinuxBranch']} {loc}"
         )
-    os.chdir("linux")
+    os.chdir(loc)
     # cmd = f". /opt/Xilinx/Vivado/{request.param['Vivado']}/settings64.sh ; "
     cmd = ""
     cmd += f"export ARCH={request.param['ARCH']} ; "
@@ -34,7 +44,8 @@ def build_kernel(request):  # sourcery skip: raise-specific-error
     else:
         os.system(f"{cmd} make zynq_xcomm_adv7511_defconfig")
         os.system(f"{cmd} make -j$(nproc) UIMAGE_LOADADDR=0x8000 uImage")
-    os.chdir("..")
+    os.chdir(org)
+    return loc
 
 
 @pytest.fixture(scope="function")

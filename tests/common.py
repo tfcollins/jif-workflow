@@ -5,6 +5,8 @@ import adijif
 import numpy as np
 import pytest
 
+linux_parent = os.environ.get("LINUX_DIR") if "LINUX_DIR" in os.environ else os.getcwd()
+
 # params = {
 #     "Vivado": "2019.1",
 #     "LinuxBranch": "2019_2",
@@ -25,11 +27,15 @@ params32 = {
 }
 
 def build_devicetree(dts_name):
+    org = os.getcwd()
+
+
     dtb_name = dts_name.replace(".dts", ".dtb")
     shutil.copy(
         dts_name,
-        f"linux/arch/arm64/boot/dts/xilinx/{dts_name}",
+        f"{linux_parent}/linux/arch/arm64/boot/dts/xilinx/{dts_name}",
     )
+    os.chdir(linux_parent)
     os.chdir("linux")
     cmd = f". /opt/Xilinx/Vivado/{params['Vivado']}/settings64.sh ; "
     cmd = "export DTS_BFLAGS=-@ ; "
@@ -42,7 +48,7 @@ def build_devicetree(dts_name):
     shutil.copy(f"arch/arm64/boot/dts/xilinx/{dtb_name}", "../system.dtb")
     os.system(f"rm arch/arm64/boot/dts/xilinx/{dts_name}")
     os.system(f"rm arch/arm64/boot/dts/xilinx/{dtb_name}")
-    os.chdir("..")
+    os.chdir(org)
     return "system.dtb"
 
 
