@@ -203,6 +203,7 @@ def get_rates_from_sample_rate(sample_rate, vcxo, rx_jesd_mode, tx_jesd_mode):
                             print(f"----Found sample_rate config: {sample_rate}")
                             return param_set
                         except Exception as e:
+                            print("Configuration failed")
                             print(e)
                             pass
     return dict(sample_rate=sample_rate, not_possible=True)
