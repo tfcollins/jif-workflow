@@ -13,13 +13,13 @@ import pytest
 # }
 params = {
     "Vivado": "2021.1",
-    "LinuxBranch": "master",
+    "LinuxBranch": "2021_R1",
     "ARCH": "arm64",
     "CROSS_COMPILE": "aarch64-linux-gnu-",
 }
 params32 = {
     "Vivado": "2021.1",
-    "LinuxBranch": "master",
+    "LinuxBranch": "2021_R1",
     "ARCH": "arm",
     "CROSS_COMPILE": "arm-linux-gnueabihf-",
 }
