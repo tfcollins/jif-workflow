@@ -158,7 +158,7 @@ def create_jif_configuration(
     if "sysref_div" in param_set:
         sys.converter._lmfc_divisor_sysref_available = param_set["sysref_div"]
         sys.converter.adc._adc_lmfc_divisor_sysref = param_set["sysref_div"]
-        sys.converter.dac._adc_lmfc_divisor_sysref = param_set["sysref_div"]
+        sys.converter.dac._dac_lmfc_divisor_sysref = param_set["sysref_div"]
 
     # sys.Debug_Solver = True
     cfg = sys.solve()
