@@ -37,9 +37,18 @@ rx_jesd_mode = (
 
 @pytest.mark.parametrize(
     "param_set",
+    []
     + [
-        dict(ADC_freq=int(4e9), cddc=4, fddc=4, DAC_freq=int(12e9), cduc=6, fduc=8, sysref_div=sysref_div)
-        for sysref_div in [4,8,16,32,64,128,256,512,1024]
+        dict(
+            ADC_freq=int(4e9),
+            cddc=4,
+            fddc=4,
+            DAC_freq=int(12e9),
+            cduc=6,
+            fduc=8,
+            sysref_div=sysref_div,
+        )
+        for sysref_div in [4, 8, 16, 32, 64, 128, 256, 512, 1024]
     ]
     # + ad9081_get_rx_decimations(vcxo, "10.0", "9", "jesd204b", "jesd204b"),
 )
@@ -145,6 +154,3 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
         else:
             assert lr == sys.converter.dac.bit_clock
     logger.saved["status"] = "passed"
-
-
-
