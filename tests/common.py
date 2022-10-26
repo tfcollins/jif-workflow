@@ -45,7 +45,7 @@ def build_devicetree(dts_name):
     if not os.path.isfile(f"arch/arm64/boot/dts/xilinx/{dtb_name}"):
         raise Exception(f"Failed to build {dtb_name}")
 
-    shutil.copy(f"arch/arm64/boot/dts/xilinx/{dtb_name}", "../system.dtb")
+    shutil.copy(f"arch/arm64/boot/dts/xilinx/{dtb_name}", f"{org}/system.dtb")
     os.system(f"rm arch/arm64/boot/dts/xilinx/{dts_name}")
     os.system(f"rm arch/arm64/boot/dts/xilinx/{dtb_name}")
     os.chdir(org)
