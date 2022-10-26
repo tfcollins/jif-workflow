@@ -48,7 +48,7 @@ rx_jesd_mode = (
             fduc=8,
             sysref_div=sysref_div,
         )
-        for sysref_div in [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
+        for sysref_div in [*range(1, 128, 2)]
     ]
     # + ad9081_get_rx_decimations(vcxo, "10.0", "9", "jesd204b", "jesd204b"),
 )
