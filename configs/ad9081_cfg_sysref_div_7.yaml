@@ -1,29 +1,29 @@
 clock:
   n2: 3125
   out_dividers:
-  - 1
+  - 14
   - 2688
   - 2688
-  - 12
-  - 1
   - 6
-  - 12
+  - 192
+  - 6
+  - 192
   output_clocks:
     AD9081_ref_clk:
-      divider: 1
-      rate: 3000000000.0
+      divider: 14
+      rate: 214285714.2857143
     adc_fpga_link_out_clk:
-      divider: 1
-      rate: 3000000000.0
+      divider: 192
+      rate: 15625000.0
     adc_fpga_ref_clk:
-      divider: 12
-      rate: 250000000.0
+      divider: 6
+      rate: 500000000.0
     adc_sysref:
       divider: 2688
       rate: 1116071.4285714286
     dac_fpga_link_out_clk:
-      divider: 12
-      rate: 250000000.0
+      divider: 192
+      rate: 15625000.0
     dac_fpga_ref_clk:
       divider: 6
       rate: 500000000.0
@@ -38,8 +38,8 @@ converter:
   clocking_option: integrated_pll
   pll_config:
     d: 1
-    m_vco: 8
-    n_vco: 2
+    m_vco: 7
+    n_vco: 32
     r: 4
     serdes_pll_div: 1
 datapath_adc:
@@ -159,28 +159,26 @@ datapath_dac:
     - 0
     - 0
 fpga_adc:
-  band: 0
   d: 1
-  m: 1
-  n: 40
-  out_clk_select: XCVR_PROGDIV_CLK
-  progdiv: 40.0
-  qty4_full_rate_enabled: 1
-  separate_device_clock_required: 0
-  sys_clk_select: XCVR_QPLL0
-  transport_samples_per_clock: 1
-  type: qpll
-  vco: 10000000000.0
+  m: 2
+  n1: 4
+  n2: 5
+  out_clk_select: XCVR_REFCLK_DIV2
+  separate_device_clock_required: 1
+  sys_clk_select: XCVR_CPLL
+  transport_samples_per_clock: 16
+  type: cpll
+  vco: 5000000000.0
 fpga_dac:
   band: 0
   d: 1
-  m: 1
-  n: 20
+  m: 2
+  n: 40
   out_clk_select: XCVR_REFCLK_DIV2
   qty4_full_rate_enabled: 1
   separate_device_clock_required: 1
   sys_clk_select: XCVR_QPLL0
-  transport_samples_per_clock: 1
+  transport_samples_per_clock: 16
   type: qpll
   vco: 10000000000.0
 jesd_adc:
