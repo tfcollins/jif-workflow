@@ -48,7 +48,7 @@ rx_jesd_mode = (
             fduc=8,
             sysref_div=sysref_div,
         )
-        for sysref_div in [*range(1, 2048, 2)]
+        for sysref_div in [*range(1, 4096, 2)]
     ]
     # + ad9081_get_rx_decimations(vcxo, "10.0", "9", "jesd204b", "jesd204b"),
 )
@@ -61,8 +61,12 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
 
     ############################################################################
     # Generate JIF configuration
-    cfg, sys = create_jif_configuration(param_set, vcxo, rx_jesd_mode, tx_jesd_mode)
-    # return
+    try:
+        cfg, sys = create_jif_configuration(param_set, vcxo, rx_jesd_mode, tx_jesd_mode)
+    except Exception as e:
+        if "No solution found" in str(e):
+            pytest.skip(f"No solution found: {param_set['sysref_div']}")        
+        raise e
     logger.saved["cfg"] = cfg
     logger.saved["status"] = "failed"
 
