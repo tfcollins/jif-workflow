@@ -40,10 +40,10 @@ def build_kernel(request):  # sourcery skip: raise-specific-error
     cmd += f"export CROSS_COMPILE={request.param['CROSS_COMPILE']} ; "
     if arch == "arm64":
         os.system(f"{cmd} make adi_zynqmp_defconfig")
-        os.system(f"{cmd} make -j$(nproc) Image UIMAGE_LOADADDR=0x8000")
+        os.system(f"{cmd} make -j4 Image UIMAGE_LOADADDR=0x8000")
     else:
         os.system(f"{cmd} make zynq_xcomm_adv7511_defconfig")
-        os.system(f"{cmd} make -j$(nproc) UIMAGE_LOADADDR=0x8000 uImage")
+        os.system(f"{cmd} make -j4 UIMAGE_LOADADDR=0x8000 uImage")
     os.chdir(org)
     return loc
 
