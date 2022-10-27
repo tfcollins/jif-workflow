@@ -47,6 +47,7 @@ def list_files(directory):
 )
 def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
 
+    cfg_filename = f"configs/{cfg_filename}"
     sys_filename = cfg_filename.replace("cfg", "sys")
     param_set_filename = cfg_filename.replace("cfg", "param_set")
 
