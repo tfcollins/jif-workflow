@@ -1,0 +1,7 @@
+ADC_freq: 4000000000
+DAC_freq: 12000000000
+cddc: 4
+cduc: 6
+fddc: 4
+fduc: 8
+sysref_div: 12
