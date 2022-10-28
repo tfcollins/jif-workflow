@@ -118,6 +118,14 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     print("Waiting for board to boot")
     nb.wait_for_boot()
 
+
+    ############################################################################
+    # Get dmesg
+    dev = jesd(address=ip)
+    dmesg = dev.fs._run("dmesg")
+    logger.saved["dmesg"] = dmesg[0]
+
+
     ############################################################################
     # Verify board working
     print("Verifying board working")
@@ -138,11 +146,6 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     logger.saved["RX_0x00CA"] = reg
     reg = dev.reg_read(0x09)
     logger.saved["TX_0x09"] = reg
-
-    dev = jesd(address=ip)
-    # Get dmesg
-    dmesg = dev.fs._run("dmesg")
-    logger.saved["dmesg"] = dmesg[0]
 
     # Log expected device clock based on JIF config (not measured)
     logger.saved["RX_Expected_Device_Clock"] = (
