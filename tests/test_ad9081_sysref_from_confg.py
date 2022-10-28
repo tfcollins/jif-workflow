@@ -156,6 +156,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     )
 
     # Check JESD lanes
+    dev = jesd(address=ip)
     jdevices_statuses = dev.get_all_statuses()
     logger.saved["jdevices_statuses"] = jdevices_statuses
     for dev in jdevices_statuses:
