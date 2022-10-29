@@ -150795,7 +150795,7 @@ clock: !!python/object:adijif.clocks.hmc7044.hmc7044
     coordinate_piecewise_linear: !!python/name:docplex.cp.modeler.coordinate_piecewise_linear ''
     count: !!python/name:docplex.cp.modeler.count ''
     count_different: !!python/name:docplex.cp.modeler.count_different ''
-    create_time: 1666907912.5987086
+    create_time: 1667031247.0305073
     cumul_range: !!python/name:docplex.cp.modeler.cumul_range ''
     diff: !!python/name:docplex.cp.modeler.diff ''
     distribute: !!python/name:docplex.cp.modeler.distribute ''
@@ -154866,7 +154866,7 @@ clock: !!python/object:adijif.clocks.hmc7044.hmc7044
     kpis: !!python/object/apply:collections.OrderedDict
     - []
     last: !!python/name:docplex.cp.modeler.last ''
-    last_add_time: 1666907912.6177115
+    last_add_time: 1667031247.0647905
     length_eval: !!python/name:docplex.cp.modeler.length_eval ''
     length_of: !!python/name:docplex.cp.modeler.length_of ''
     length_of_next: !!python/name:docplex.cp.modeler.length_of_next ''
@@ -220684,21 +220684,21 @@ clock: !!python/object:adijif.clocks.hmc7044.hmc7044
           IntervalMax: 4503599627370494
           IntervalMin: -4503599627370494
           JsonFormatVersion: '1.20'
-          ModelBuildTime: 0.019002914428710938
-          ModelCompileTime: 0.049721479415893555
+          ModelBuildTime: 0.03428316116333008
+          ModelCompileTime: 0.03577160835266113
           ModelDataSize: 87114
-          ModelSubmitTime: 0.01585078239440918
+          ModelSubmitTime: 0.016823768615722656
           ProxyVersion: 17
           SolverAgent: local
           SolverVersion: 22.1.0.0
           SourceDate: Mar 25 2022
           TotalDataReceiveSize: 17859
           TotalDataSendSize: 87175
-          TotalDataSendTime: 0.0004241466522216797
-          TotalJsonParseTime: 0.0001537799835205078
-          TotalSolveTime: 0.38852548599243164
-          TotalUtf8DecodeTime: 6.67572021484375e-05
-          TotalUtf8EncodeTime: 6.341934204101562e-05
+          TotalDataSendTime: 0.00034880638122558594
+          TotalJsonParseTime: 0.00015854835510253906
+          TotalSolveTime: 0.3485538959503174
+          TotalUtf8DecodeTime: 6.0558319091796875e-05
+          TotalUtf8EncodeTime: 3.910064697265625e-05
       search_status: SearchCompleted
       solution: !!python/object/new:docplex.cp.solution.CpoModelSolution
         state: !!python/tuple
@@ -220723,271 +220723,271 @@ clock: !!python/object:adijif.clocks.hmc7044.hmc7044
           - 500000000
           - 500000000
           var_solutions_dict:
-            139866442029312: &id069 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111185633024: &id069 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id010
                 value: 128
             r2: *id069
-            139866517495424: &id070 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111074887296: &id070 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id018
                 value: 1
             vcxo_doubler: *id070
-            139866518312384: &id071 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111228039552: &id071 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id013
                 value: 3125
             n2: *id071
-            139866400623168: &id073 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111185534848: &id073 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id072
                 value: 1
             serdes_pll_div: *id073
-            139866400563904: &id075 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111075184384: &id075 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id074
                 value: 1
             ad9081_d: *id075
-            139866400564736: &id076 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111075181184: &id076 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id035
                 value: 4
             ad9081_r: *id076
-            139866400622656: &id077 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111075181120: &id077 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id033
                 value: 8
             ad9081_m_vco: *id077
-            139866400565760: &id078 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111075182144: &id078 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id034
                 value: 2
             ad9081_n_vco: *id078
-            139865113303552: &id079 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111074886592: &id079 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id040
                 value: 1
             d_AD9081_ref_clk: *id079
-            139866442405376: &id080 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111074887744: &id080 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id014
                 value: 2304
             d_adc_sysref: *id080
-            139866400583808: &id081 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111074888832: &id081 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id015
                 value: 2304
             d_dac_sysref: *id081
-            139866400712576: &id082 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111144353216: &id082 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id045
                 value: 1
             AD9081_RXband_qpll: *id082
-            139866442797376: &id083 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069980672: &id083 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id047
                 value: 0
             AD9081_RXband_qpll1: *id083
-            139866400566656: &id084 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111075180672: &id084 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id016
                 value: 6
             d_xilinx_adc: *id084
-            139866359364224: &id086 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069981312: &id086 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id085
                 value: 5
             AD9081_RXn1_cpll: *id086
-            139866359363264: &id088 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069981248: &id088 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id087
                 value: 2
             AD9081_RXn2_cpll: *id088
-            139866359364800: &id090 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069982208: &id090 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id089
                 value: 1
             AD9081_RXm_cpll: *id090
-            139866400924096: &id092 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069953088: &id092 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id091
                 value: 150
             AD9081_RXn_qpll: *id092
-            139866400927360: &id094 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069952704: &id094 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id093
                 value: 1
             AD9081_RXm_qpll: *id094
-            139866400712320: &id096 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111145292224: &id096 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id095
                 value: 16
             AD9081_RXn_qpll1: *id096
-            139866400923904: &id098 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111074406336: &id098 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id097
                 value: 1
             AD9081_RXm_qpll1: *id098
-            139866359363712: &id100 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069980800: &id100 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id099
                 value: 1
             AD9081_RXd_cpll: *id100
-            139866400927168: &id102 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069950848: &id102 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id101
                 value: 1
             AD9081_RXd_qpll: *id102
-            139866400714560: &id104 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111074405120: &id104 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id103
                 value: 1
             AD9081_RXd_qpll1: *id104
-            139866359364864: &id105 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069982464: &id105 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id049
                 value: 0
             AD9081_RXsingle_clk: *id105
-            139866359325568: &id106 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069985344: &id106 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id050
                 value: 1
             AD9081_RXtwo_clks: *id106
-            139866518233600: &id107 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069951936: &id107 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id051
                 value: 12
             d_xilinx_adc_link_out: *id107
-            139866359325824: &id109 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069986240: &id109 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id108
                 value: 1
             AD9081_RX_samples_per_clock: *id109
-            139866359664384: &id110 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937468992: &id110 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id053
                 value: 0
             AD9081_TXband_qpll: *id110
-            139866359661888: &id111 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937469312: &id111 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id054
                 value: 0
             AD9081_TXband_qpll1: *id111
-            139866400749888: &id112 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069953408: &id112 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id017
                 value: 6
             d_xilinx_dac: *id112
-            139866359663168: &id114 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110894661824: &id114 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id113
                 value: 4
             AD9081_TXn1_cpll: *id114
-            139866359661248: &id116 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110894662592: &id116 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id115
                 value: 4
             AD9081_TXn2_cpll: *id116
-            139866359660736: &id118 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937469056: &id118 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id117
                 value: 1
             AD9081_TXm_cpll: *id118
-            139866359328192: &id120 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937470528: &id120 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id119
                 value: 40
             AD9081_TXn_qpll: *id120
-            139866359325056: &id122 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937472384: &id122 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id121
                 value: 2
             AD9081_TXm_qpll: *id122
-            139866359661760: &id124 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937472896: &id124 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id123
                 value: 16
             AD9081_TXn_qpll1: *id124
-            139866359328000: &id126 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937470208: &id126 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id125
                 value: 1
             AD9081_TXm_qpll1: *id126
-            139866359663360: &id128 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110894662080: &id128 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id127
                 value: 1
             AD9081_TXd_cpll: *id128
-            139866359327744: &id130 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937471104: &id130 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id129
                 value: 1
             AD9081_TXd_qpll: *id130
-            139866359662272: &id132 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110937470336: &id132 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id131
                 value: 1
             AD9081_TXd_qpll1: *id132
-            139866317398912: &id133 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110894662336: &id133 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id056
                 value: 0
             AD9081_TXsingle_clk: *id133
-            139866150164480: &id134 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110894665408: &id134 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id057
                 value: 1
             AD9081_TXtwo_clks: *id134
-            139866400925888: &id135 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140111069952320: &id135 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id058
                 value: 12
             d_xilinx_dac_link_out: *id135
-            139866150164544: &id137 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
+            140110894665472: &id137 !!python/object/new:docplex.cp.solution.CpoIntVarSolution
               state: !!python/tuple
               - null
               - expr: *id136
@@ -221035,13 +221035,13 @@ clock: !!python/object:adijif.clocks.hmc7044.hmc7044
           NumberOfUnboundModelVariablesInLogPeriod: 1
           NumberOfVariables: 45
           NumberOfWarnings: 0
-          PeakMemoryUsage: 47418335
+          PeakMemoryUsage: 47428566
           PresolveTime: 0
           RestartIdleTime: 0
           SearchStatus: SearchCompleted
           SearchStopCause: SearchHasNotBeenStopped
-          SolveTime: 0.31
-          TotalTime: 0.31
+          SolveTime: 0.29
+          TotalTime: 0.29
       solver_log: ''
       stop_cause: SearchHasNotBeenStopped
   solver: CPLEX
