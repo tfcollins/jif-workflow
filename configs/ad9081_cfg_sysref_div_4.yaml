@@ -1,7 +1,7 @@
 clock:
   n2: 3125
   out_dividers:
-  - 1
+  - 5
   - 1536
   - 1536
   - 6
@@ -10,8 +10,8 @@ clock:
   - 12
   output_clocks:
     AD9081_ref_clk:
-      divider: 1
-      rate: 3000000000.0
+      divider: 5
+      rate: 600000000.0
     adc_fpga_link_out_clk:
       divider: 12
       rate: 250000000.0
@@ -38,9 +38,9 @@ converter:
   clocking_option: integrated_pll
   pll_config:
     d: 1
-    m_vco: 8
-    n_vco: 2
-    r: 4
+    m_vco: 5
+    n_vco: 4
+    r: 1
     serdes_pll_div: 1
 datapath_adc:
   cddc:
@@ -160,9 +160,9 @@ datapath_dac:
     - 0
 fpga_adc:
   d: 1
-  m: 1
-  n1: 5
-  n2: 2
+  m: 2
+  n1: 4
+  n2: 5
   out_clk_select: XCVR_REFCLK_DIV2
   separate_device_clock_required: 1
   sys_clk_select: XCVR_CPLL

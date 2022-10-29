@@ -1,7 +1,7 @@
 clock:
   n2: 15625
   out_dividers:
-  - 50
+  - 5
   - 3840
   - 3840
   - 5
@@ -10,8 +10,8 @@ clock:
   - 10
   output_clocks:
     AD9081_ref_clk:
-      divider: 50
-      rate: 50000000.0
+      divider: 5
+      rate: 500000000.0
     adc_fpga_link_out_clk:
       divider: 10
       rate: 250000000.0
@@ -38,8 +38,8 @@ converter:
   clocking_option: integrated_pll
   pll_config:
     d: 1
-    m_vco: 5
-    n_vco: 48
+    m_vco: 8
+    n_vco: 3
     r: 1
     serdes_pll_div: 1
 datapath_adc:
