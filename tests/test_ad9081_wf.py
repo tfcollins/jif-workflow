@@ -125,8 +125,14 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     found_devices = [dev.name for dev in ctx.devices]
     logger.saved["found_devices"] = found_devices
     print("Found_devices:", found_devices)
+    found_devs = True
+    e1_msg = "" 
     for dev in required_devices:
-        assert dev in found_devices, f"{dev} not found"
+        c = dev in found_devices
+        found_devs = c & found_devs
+        if not c:
+            print(f"Device {dev} not found")
+            e1_msg = f"Device {dev} not found"
 
     # Read registers
     dev = ctx.find_device("axi-ad9081-rx-hpc")
@@ -153,6 +159,12 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     # Check JESD lanes
     jdevices_statuses = dev.get_all_statuses()
     logger.saved["jdevices_statuses"] = jdevices_statuses
+
+    enables_check = True
+    link_data_check = True
+    adc_bit_clock_check = True
+    dac_bit_clock_check = True
+
     for dev in jdevices_statuses:
         print("Checking", dev)
         print(jdevices_statuses[dev])
@@ -161,11 +173,40 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
             jdevices_statuses[dev]["enabled"],
             jdevices_statuses[dev]["Link status"],
         )
-        assert jdevices_statuses[dev]["enabled"] == "enabled"
-        assert jdevices_statuses[dev]["Link status"] == "DATA"
+        enable = jdevices_statuses[dev]["enabled"] == "enabled"
+        enables_check = enables_check & enable
+        if not enable:
+            print(f"Device {dev} not enabled")
+            e2_msg = f"Device {dev} not enabled"
+
+        data = jdevices_statuses[dev]["Link status"] == "DATA"
+        link_data_check = link_data_check & data
+        if not data:
+            print(f"Device {dev} not in DATA")
+            e3_msg = f"Device {dev} not in DATA"
+
         lr = float(jdevices_statuses[dev]["Lane rate"].split(" ")[0]) * 1e6
         if "rx" in dev:
-            assert lr == sys.converter.adc.bit_clock
+            lane_rate_c = lr == sys.converter.adc.bit_clock
+            adc_bit_clock_check = adc_bit_clock_check & lane_rate_c
+            if not lane_rate_c:
+                print(f"Device {dev} has wrong bit clock")
+                e4_msg = f"Device {dev} has wrong bit clock"
         else:
-            assert lr == sys.converter.dac.bit_clock
+            lane_rate_c = lr == sys.converter.dac.bit_clock
+            dac_bit_clock_check = dac_bit_clock_check & lane_rate_c
+            if not lane_rate_c:
+                print(f"Device {dev} has wrong bit clock")
+                e5_msg = f"Device {dev} has wrong bit clock"
     logger.saved["status"] = "passed"
+
+    if not found_devs:
+        pytest.fail(e1_msg)
+    if not enables_check:
+        pytest.fail(e2_msg)
+    if not link_data_check:
+        pytest.fail(e3_msg)
+    if not adc_bit_clock_check:
+        pytest.fail(e4_msg)
+    if not dac_bit_clock_check:
+        pytest.fail(e5_msg)
