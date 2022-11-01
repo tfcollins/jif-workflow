@@ -40,7 +40,7 @@ rx_jesd_mode = (
     []
     + [
         get_rates_from_sample_rate(rate * 1e6, vcxo, rx_jesd_mode, tx_jesd_mode)
-        for rate in range(300, 321, 1)
+        for rate in range(250, 321, 1)
     ]
     + [
         # dict(ADC_freq=3000000000, cddc=4, fddc=2, DAC_freq=3000000000, cduc=4, fduc=4), # Case 0
