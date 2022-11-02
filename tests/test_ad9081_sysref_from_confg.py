@@ -40,7 +40,7 @@ pytest.collection_name = "ad9081"
 
 # List file in directory
 def list_files(directory):
-    return [f for f in os.listdir(directory) if "_test.cfg" in f]
+    return [f for f in os.listdir(directory) if "_test.yaml" in f]
 
 
 @pytest.mark.parametrize(
