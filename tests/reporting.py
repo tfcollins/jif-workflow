@@ -47,13 +47,17 @@ def pytest_sessionfinish(session, exitstatus):
         else:
             db_name = "scratch"
 
-    client = MongoClient(db_ip, int(db_port))
-    db = client["jif_testing"]
-    collection = db[db_name]
-    collection.insert_one(
-        {
-            "testname": pytest.testname,
-            "job_info": pytest.job_info,
-            "results": pytest.results,
-        }
-    )
+    try:
+        client = MongoClient(db_ip, int(db_port))
+        db = client["jif_testing"]
+        collection = db[db_name]
+        collection.insert_one(
+            {
+                "testname": pytest.testname,
+                "job_info": pytest.job_info,
+                "results": pytest.results,
+            }
+        )
+    except Exception as e:
+        print("Failed to send to database")
+        print(e)
