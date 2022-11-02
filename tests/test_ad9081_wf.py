@@ -50,8 +50,8 @@ pytest.collection_name = "ad9081"
 
 # indexes = [0, 8, 12, 52, 56, 60, 61, 64, 65, 70]
 indexes = [0, 8]
-rates = [*range(250, 321, 1)]
-rates = [rates[index] for index in indexes]
+rates = [*range(100, 401, 1)]
+# rates = [rates[index] for index in indexes]
 
 
 @pytest.mark.parametrize(
