@@ -4,6 +4,7 @@ pylibiio
 pyadi-iio
 black
 pyyaml
+pymongo
 pyadi-jif/.[cplex]
 pyadi-dt/.
 nebula/.
