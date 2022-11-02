@@ -27,6 +27,9 @@ rx_jesd_mode = (
     else "10.0"
 )
 
+pytest.testname = "ad9081_variable_sample_rate_test_precalculated"
+pytest.collection_name = "ad9081"
+
 # The purpose of this test is to vary the sysref rate and verify the system at a
 # know good configuration to see how well the dividers hold up
 #
@@ -37,7 +40,7 @@ rx_jesd_mode = (
 
 # List file in directory
 def list_files(directory):
-    return [f for f in os.listdir(directory) if "cfg" in f]
+    return [f for f in os.listdir(directory) if "_test.cfg" in f]
 
 
 @pytest.mark.parametrize(
@@ -50,12 +53,12 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     print(f"Loading config file: {cfg_filename}")
 
     cfg_filename = f"configs/{cfg_filename}"
-    sys_filename = cfg_filename.replace("cfg", "sys")
-    param_set_filename = cfg_filename.replace("cfg", "param_set")
+    # sys_filename = cfg_filename.replace("cfg", "sys")
+    # param_set_filename = cfg_filename.replace("cfg", "param_set")
 
-    cfg = yaml.load(open(cfg_filename, "r"), Loader=yaml.FullLoader)
+    param_set = yaml.load(open(cfg_filename, "r"), Loader=yaml.FullLoader)
+    cfg = param_set['cfg']
     # sys = yaml.load(open(sys_filename, "r"), Loader=yaml.FullLoader)
-    param_set = yaml.load(open(param_set_filename, "r"), Loader=yaml.FullLoader)
 
     logger.saved["param_set"] = param_set
     logger.saved["status"] = "skipped"
