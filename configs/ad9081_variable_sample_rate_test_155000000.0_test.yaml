@@ -1,217 +1,225 @@
-adc_bit_clock: 6200000000.0
-clock:
-  n2: 3875
-  out_dividers:
-  - 20
-  - 2048
-  - 2048
-  - 16
-  - 52
-  - 8
-  - 128
-  output_clocks:
-    AD9081_ref_clk:
-      divider: 20
-      rate: 124000000.0
-    adc_fpga_link_out_clk:
-      divider: 52
-      rate: 47692307.692307696
-    adc_fpga_ref_clk:
-      divider: 16
-      rate: 155000000.0
-    adc_sysref:
-      divider: 2048
-      rate: 1210937.5
-    dac_fpga_link_out_clk:
-      divider: 128
-      rate: 19375000.0
-    dac_fpga_ref_clk:
-      divider: 8
-      rate: 310000000.0
-    dac_sysref:
-      divider: 2048
-      rate: 1210937.5
-  r2: 192
-  vco: 2480000000.0
-  vcxo: 122880000.0
-  vcxo_doubler: 1
-converter:
-  clocking_option: integrated_pll
-  pll_config:
+ADC_freq: 1860000000
+DAC_freq: 3720000000
+cddc: 2
+cduc: 4
+cfg:
+  adc_bit_clock: 6200000000.0
+  clock:
+    n2: 3875
+    out_dividers:
+    - 20
+    - 2048
+    - 2048
+    - 16
+    - 52
+    - 8
+    - 128
+    output_clocks:
+      AD9081_ref_clk:
+        divider: 20
+        rate: 124000000.0
+      adc_fpga_link_out_clk:
+        divider: 52
+        rate: 47692307.692307696
+      adc_fpga_ref_clk:
+        divider: 16
+        rate: 155000000.0
+      adc_sysref:
+        divider: 2048
+        rate: 1210937.5
+      dac_fpga_link_out_clk:
+        divider: 128
+        rate: 19375000.0
+      dac_fpga_ref_clk:
+        divider: 8
+        rate: 310000000.0
+      dac_sysref:
+        divider: 2048
+        rate: 1210937.5
+    r2: 192
+    vco: 2480000000.0
+    vcxo: 122880000.0
+    vcxo_doubler: 1
+  converter:
+    clocking_option: integrated_pll
+    pll_config:
+      d: 2
+      m_vco: 8
+      n_vco: 15
+      r: 2
+      serdes_pll_div: 1
+  dac_bit_clock: 6200000000.0
+  datapath_adc:
+    cddc:
+      decimations:
+      - 2
+      - 2
+      - 2
+      - 2
+      enabled:
+      - true
+      - true
+      - true
+      - true
+      nco_frequencies:
+      - 0
+      - 0
+      - 0
+      - 0
+      nco_phases:
+      - 0
+      - 0
+      - 0
+      - 0
+    fddc:
+      decimations:
+      - 6
+      - 6
+      - 6
+      - 6
+      - 6
+      - 6
+      - 6
+      - 6
+      enabled:
+      - true
+      - true
+      - false
+      - false
+      - true
+      - true
+      - false
+      - false
+      nco_frequencies:
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      nco_phases:
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      source:
+      - 1
+      - 1
+      - 2
+      - 2
+      - 3
+      - 3
+      - 4
+      - 4
+  datapath_dac:
+    cduc:
+      enabled:
+      - true
+      - true
+      - true
+      - true
+      interpolation: 4
+      nco_frequencies:
+      - 0
+      - 0
+      - 0
+      - 0
+      nco_phases:
+      - 0
+      - 0
+      - 0
+      - 0
+      sources:
+      - - 1
+      - - 1
+      - - 3
+      - - 3
+    fduc:
+      enabled:
+      - true
+      - true
+      - true
+      - true
+      interpolation: 6
+      nco_frequencies:
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      nco_phases:
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+      - 0
+  fpga_adc:
+    band: 1
     d: 2
-    m_vco: 8
-    n_vco: 15
-    r: 2
-    serdes_pll_div: 1
-dac_bit_clock: 6200000000.0
-datapath_adc:
-  cddc:
-    decimations:
-    - 2
-    - 2
-    - 2
-    - 2
-    enabled:
-    - true
-    - true
-    - true
-    - true
-    nco_frequencies:
-    - 0
-    - 0
-    - 0
-    - 0
-    nco_phases:
-    - 0
-    - 0
-    - 0
-    - 0
-  fddc:
-    decimations:
-    - 6
-    - 6
-    - 6
-    - 6
-    - 6
-    - 6
-    - 6
-    - 6
-    enabled:
-    - true
-    - true
-    - false
-    - false
-    - true
-    - true
-    - false
-    - false
-    nco_frequencies:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    nco_phases:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    source:
-    - 1
-    - 1
-    - 2
-    - 2
-    - 3
-    - 3
-    - 4
-    - 4
-datapath_dac:
-  cduc:
-    enabled:
-    - true
-    - true
-    - true
-    - true
-    interpolation: 4
-    nco_frequencies:
-    - 0
-    - 0
-    - 0
-    - 0
-    nco_phases:
-    - 0
-    - 0
-    - 0
-    - 0
-    sources:
-    - - 1
-    - - 1
-    - - 3
-    - - 3
-  fduc:
-    enabled:
-    - true
-    - true
-    - true
-    - true
-    interpolation: 6
-    nco_frequencies:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    nco_phases:
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-    - 0
-fpga_adc:
-  band: 1
-  d: 2
-  m: 1
-  n: 80
-  out_clk_select: XCVR_PROGDIV_CLK
-  progdiv: 40.0
-  qty4_full_rate_enabled: 0
-  separate_device_clock_required: 0
-  sys_clk_select: XCVR_QPLL0
-  transport_samples_per_clock: 4
-  type: qpll
-  vco: 12400000000.0
-fpga_dac:
-  band: 1
-  d: 2
-  m: 1
-  n: 40
-  out_clk_select: XCVR_REFCLK_DIV2
-  qty4_full_rate_enabled: 0
-  separate_device_clock_required: 1
-  sys_clk_select: XCVR_QPLL0
-  transport_samples_per_clock: 8
-  type: qpll
-  vco: 12400000000.0
-jesd_adc:
-  CS: 0
-  F: 4
-  HD: 0
-  K: 32
-  L: 4
-  M: 8
-  Np: 16
-  S: 1
-  bit_clock: 6200000000.0
-  converter_clock: 1860000000
-  jesd_class: jesd204b
-  jesd_mode: '10'
-  multiframe_clock: 4843750.0
-  sample_clock: 155000000
-jesd_dac:
-  CS: 0
-  F: 4
-  HD: 0
-  K: 32
-  L: 4
-  M: 8
-  Np: 16
-  S: 1
-  bit_clock: 6200000000.0
-  converter_clock: 3720000000
-  jesd_class: jesd204b
-  jesd_mode: '9'
-  multiframe_clock: 4843750.0
-  sample_clock: 155000000
+    m: 1
+    n: 80
+    out_clk_select: XCVR_PROGDIV_CLK
+    progdiv: 40.0
+    qty4_full_rate_enabled: 0
+    separate_device_clock_required: 0
+    sys_clk_select: XCVR_QPLL0
+    transport_samples_per_clock: 4
+    type: qpll
+    vco: 12400000000.0
+  fpga_dac:
+    band: 1
+    d: 2
+    m: 1
+    n: 40
+    out_clk_select: XCVR_REFCLK_DIV2
+    qty4_full_rate_enabled: 0
+    separate_device_clock_required: 1
+    sys_clk_select: XCVR_QPLL0
+    transport_samples_per_clock: 8
+    type: qpll
+    vco: 12400000000.0
+  jesd_adc:
+    CS: 0
+    F: 4
+    HD: 0
+    K: 32
+    L: 4
+    M: 8
+    Np: 16
+    S: 1
+    bit_clock: 6200000000.0
+    converter_clock: 1860000000
+    jesd_class: jesd204b
+    jesd_mode: '10'
+    multiframe_clock: 4843750.0
+    sample_clock: 155000000
+  jesd_dac:
+    CS: 0
+    F: 4
+    HD: 0
+    K: 32
+    L: 4
+    M: 8
+    Np: 16
+    S: 1
+    bit_clock: 6200000000.0
+    converter_clock: 3720000000
+    jesd_class: jesd204b
+    jesd_mode: '9'
+    multiframe_clock: 4843750.0
+    sample_clock: 155000000
+fddc: 6
+fduc: 6
+sample_rate: 155000000.0
