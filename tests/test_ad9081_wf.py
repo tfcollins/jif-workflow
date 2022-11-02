@@ -221,6 +221,9 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
                 e5_msg = f"Device {dev} has wrong bit clock"
     logger.saved["status"] = "passed"
 
+    # Send to database at end
+    pytest.data_log = logger.saved
+
     if not found_devs:
         pytest.fail(e1_msg)
     if not enables_check:
