@@ -132,6 +132,12 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     nb.wait_for_boot()
 
     ############################################################################
+    # Get dmesg
+    dev = jesd(address=ip)
+    dmesg = dev.fs._run("dmesg")
+    logger.saved["dmesg"] = dmesg[0]
+
+    ############################################################################
     # Verify board working
     print("Verifying board working")
 
@@ -150,6 +156,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
             e1_msg = f"Device {dev} not found"
 
     # Read registers
+    dev = jesd(address=ip)
     dev = ctx.find_device("axi-ad9081-rx-hpc")
     reg = dev.reg_read(0x0728)
     logger.saved["RX_0x0728"] = reg
@@ -157,11 +164,6 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     logger.saved["RX_0x00CA"] = reg
     reg = dev.reg_read(0x09)
     logger.saved["TX_0x09"] = reg
-
-    dev = jesd(address=ip)
-    # Get dmesg
-    dmesg = dev.fs._run("dmesg")
-    logger.saved["dmesg"] = dmesg[0]
 
     # Log expected device clock based on JIF config (not measured)
     logger.saved["RX_Expected_Device_Clock"] = (
