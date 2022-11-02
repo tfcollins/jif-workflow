@@ -156,7 +156,6 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
             e1_msg = f"Device {dev} not found"
 
     # Read registers
-    dev = jesd(address=ip)
     dev = ctx.find_device("axi-ad9081-rx-hpc")
     reg = dev.reg_read(0x0728)
     logger.saved["RX_0x0728"] = reg
@@ -174,6 +173,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
     )
 
     # Check JESD lanes
+    dev = jesd(address=ip)
     jdevices_statuses = dev.get_all_statuses()
     logger.saved["jdevices_statuses"] = jdevices_statuses
 
