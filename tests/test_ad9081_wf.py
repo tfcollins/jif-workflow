@@ -34,13 +34,28 @@ rx_jesd_mode = (
 # ADC min/max: 1.45e9/4e9
 # DAC min/max: 2.9e9/12e9
 
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set0]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set8]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set12]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set52]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set56]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set60]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set61]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set64]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set65]
+# FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set70]
+
+indexes = [0, 8, 12, 52, 56, 60, 61, 64, 65, 70]
+rates = [*range(250, 321, 1)]
+rates = [rates[index] for index in indexes]
+
 
 @pytest.mark.parametrize(
     "param_set",
     []
     + [
         get_rates_from_sample_rate(rate * 1e6, vcxo, rx_jesd_mode, tx_jesd_mode)
-        for rate in range(250, 321, 1)
+        for rate in rates
     ]
     + [
         # dict(ADC_freq=3000000000, cddc=4, fddc=2, DAC_freq=3000000000, cduc=4, fduc=4), # Case 0
