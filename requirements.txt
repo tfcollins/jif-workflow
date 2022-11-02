@@ -5,7 +5,7 @@ pyadi-iio
 black
 pyyaml
 pymongo
-job_info
+joblib
 pyadi-jif/.[cplex]
 pyadi-dt/.
 nebula/.
