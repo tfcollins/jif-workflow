@@ -48,9 +48,10 @@ pytest.collection_name = "ad9081"
 # FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set65]
 # FAILED tests/test_ad9081_wf.py::test_ad9081_stock_hdl[build_kernel0-param_set70]
 
-indexes = [0, 8, 12, 52, 56, 60, 61, 64, 65, 70]
+# indexes = [0, 8, 12, 52, 56, 60, 61, 64, 65, 70]
+indexes = [0, 8]
 rates = [*range(250, 321, 1)]
-# rates = [rates[index] for index in indexes]
+rates = [rates[index] for index in indexes]
 
 
 @pytest.mark.parametrize(
