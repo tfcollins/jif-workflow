@@ -3,6 +3,7 @@ import os
 import shutil
 
 import pytest
+from .reporting import pytest_runtest_makereport, pytest_sessionfinish
 
 # zynqmp-zcu102-rev10-ad9081-m8-l4-vcxo122p88.dts
 
@@ -56,6 +57,8 @@ def logger(request):
     meta = MyLogger()
 
     yield meta
+
+    print("\nLogger called\n")
 
     if "cfg" not in meta.saved:
         return
