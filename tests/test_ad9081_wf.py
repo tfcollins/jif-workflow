@@ -26,6 +26,9 @@ rx_jesd_mode = (
     else "10.0"
 )
 
+pytest.testname = "ad9081_variable_sample_rate_test"
+pytest.collection_name = "ad9081"
+
 # The purpose of this test is to permute the interpolators+decimators and DAC+ADC rates without changing the
 # framer rates to verify changing upstream configurations do not effect downstream
 #
@@ -47,7 +50,7 @@ rx_jesd_mode = (
 
 indexes = [0, 8, 12, 52, 56, 60, 61, 64, 65, 70]
 rates = [*range(250, 321, 1)]
-rates = [rates[index] for index in indexes]
+# rates = [rates[index] for index in indexes]
 
 
 @pytest.mark.parametrize(
