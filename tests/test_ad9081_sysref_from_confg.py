@@ -9,7 +9,7 @@ from adi import jesd
 
 import nebula
 
-logging.getLogger().setLevel(logging.DEBUG)
+logging.getLogger().setLevel(logging.WARNING)
 
 from tests.ad9081_gen import ad9081_get_rx_decimations, get_rates_from_sample_rate
 from tests.common import build_devicetree, create_jif_configuration
@@ -116,7 +116,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     )
 
     print("Starting board reboot")
-    d._runr("reboot --force", warn=True)
+    d._runr("sleep 5 && reboot --force", warn=True)
 
     print("Waiting for board to boot")
     nb.wait_for_boot()
