@@ -9,7 +9,7 @@ from adi import jesd
 
 import nebula
 
-logging.getLogger().setLevel(logging.ERROR)
+logging.getLogger().setLevel(logging.DEBUG)
 
 from tests.ad9081_gen import ad9081_get_rx_decimations, get_rates_from_sample_rate
 from tests.common import build_devicetree, create_jif_configuration
@@ -40,7 +40,7 @@ pytest.collection_name = "ad9081"
 
 # List file in directory
 def list_files(directory):
-    return [f for f in os.listdir(directory) if "_test.yaml" in f]
+    return [f for f in os.listdir(directory) if "_test.cfg" in f]
 
 
 @pytest.mark.parametrize(
