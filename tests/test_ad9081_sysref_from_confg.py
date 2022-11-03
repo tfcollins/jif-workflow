@@ -122,7 +122,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     #d._runr("/tmp/reboot.sh &", warn=True)
     #d._runr("sleep 5 && reboot --force &", warn=True)
     #d._runr("reboot --force", warn=True)
-    nb._write_data("reboot --force")
+    nb.monitor[0]._write_data("reboot --force")
 
     print("Waiting for board to boot")
     nb.wait_for_boot()
