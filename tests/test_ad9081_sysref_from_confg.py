@@ -116,7 +116,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     )
 
     print("Starting board reboot")
-    d._runr("reboot", warn=True)
+    d._runr("reboot --force", warn=True)
 
     print("Waiting for board to boot")
     nb.wait_for_boot()
