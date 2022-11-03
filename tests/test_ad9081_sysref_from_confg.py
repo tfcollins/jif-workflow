@@ -121,7 +121,7 @@ def test_ad9081_stock_hdl(logger, build_kernel, cfg_filename):
     #d._runr("chmod +x /tmp/reboot.sh", warn=True)
     #d._runr("/tmp/reboot.sh &", warn=True)
     #d._runr("sleep 5 && reboot --force &", warn=True)
-    d._runr("reboot", warn=True)
+    d._runr("reboot --force", warn=True)
 
     print("Waiting for board to boot")
     nb.wait_for_boot()
