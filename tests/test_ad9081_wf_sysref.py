@@ -14,7 +14,10 @@ from tests.ad9081_gen import ad9081_get_rx_decimations, get_rates_from_sample_ra
 from tests.common import build_devicetree, create_jif_configuration
 
 ip = os.environ.get("TARGET_IP") if "TARGET_IP" in os.environ else "analog-2.local"
+board = os.environ.get("BOARD") if "BOARD" in os.environ else "zynqmp-zcu102-rev10-ad9081"
 vcxo = int(os.environ.get("TARGET_VCXO")) if "TARGET_VCXO" in os.environ else 122.88e6
+configfilename = os.environ.get("CONFIG") if "CONFIG" in os.environ else None #"ad9081.yaml"
+
 tx_jesd_mode = (
     os.environ.get("TARGET_TX_JESD_MODE")
     if "TARGET_TX_JESD_MODE" in os.environ
@@ -94,8 +97,8 @@ def test_ad9081_stock_hdl(logger, build_kernel, param_set):
 
     nb = nebula.manager(
         monitor_type="uart",
-        configfilename="ad9081.yaml",
-        board_name="zynqmp-zcu102-rev10-ad9081",
+        configfilename=configfilename,
+        board_name=board,
         extras=None,
     )
 
