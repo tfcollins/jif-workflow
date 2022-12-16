@@ -1,4 +1,4 @@
-# jif-worflow
+# jif-workflow
 Complete end to end workflow examples and tests for JESD configurations of ADI board
 
 See [workflow0](workflow0.md) for a breakdown of the different projects and flow of the test benches.

@@ -16,7 +16,7 @@ from tests.common import build_devicetree, create_jif_configuration
 ip = os.environ.get("TARGET_IP") if "TARGET_IP" in os.environ else "analog-2.local"
 board = os.environ.get("BOARD") if "BOARD" in os.environ else "zynqmp-zcu102-rev10-ad9081"
 vcxo = int(os.environ.get("TARGET_VCXO")) if "TARGET_VCXO" in os.environ else 122.88e6
-configfilename = os.environ.get("CONFIG") if "CONFIG" in os.environ else None #"ad9081.yaml"
+configfilename = os.environ.get("CONFIG") if "CONFIG" in os.environ else "/etc/default/nebula" #"ad9081.yaml"
 
 tx_jesd_mode = (
     os.environ.get("TARGET_TX_JESD_MODE")
